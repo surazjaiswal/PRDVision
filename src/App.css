@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+}
+
+input[type="file"] {
+  margin: 10px 0;
+}
+
+h3 {
+  color: #333;
+}
