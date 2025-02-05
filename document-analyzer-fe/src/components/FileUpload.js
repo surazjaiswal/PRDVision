@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
-import Flowchart from './FlowChart'; // Ensure this component exists
-import MindMap from './MindMap'; // Ensure this component exists
+import Flowchart from './FlowChart'; // Existing component
+import MindMap from './MindMap'; // Existing component
+import MermaidRenderer from './MermaidRenderer'; // New component for Mermaid.js rendering
 
 // Set the pdf.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
@@ -13,6 +14,7 @@ const FileUpload = () => {
   const [extractedText, setExtractedText] = useState('');
   const [flowchartData, setFlowchartData] = useState(null);
   const [mindMapData, setMindMapData] = useState(null);
+  const [mermaidChart, setMermaidChart] = useState(''); // New state for Mermaid.js
   const [loading, setLoading] = useState(false);
 
   // Handle file selection
@@ -83,17 +85,17 @@ const FileUpload = () => {
     }
   };
 
-  // Send extracted text to backend for flowchart and mind map generation
+  // Send extracted text to backend for flowchart, mind map, and Mermaid.js
   const analyzeText = async (text) => {
     console.log("Sending extracted text to backend...", text);
 
     try {
       const response = await axios.post(
         'http://localhost:8000/analyze',
-        { text },  // Ensure payload is correctly formatted
+        { text },
         {
           headers: {
-            'Content-Type': 'application/json',  // Explicitly set content type
+            'Content-Type': 'application/json',
             'Accept': 'application/json, text/plain, */*'
           },
         }
@@ -102,8 +104,11 @@ const FileUpload = () => {
       console.log("Response from backend:", response.data);
       setFlowchartData(response.data.flowchart);
       setMindMapData(response.data.mindMapData);
+      setMermaidChart(response.data.mermaid); // Set the Mermaid.js response
     } catch (error) {
       console.error("Error analyzing text:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -124,6 +129,7 @@ const FileUpload = () => {
 
       {flowchartData ? <Flowchart flowchartData={flowchartData} /> : <p>No flowchart data available</p>}
       {mindMapData ? <MindMap mindMapData={mindMapData} /> : <p>No mind map data available</p>}
+      {mermaidChart ? <MermaidRenderer chartDefinition={mermaidChart} /> : <p>No Mermaid diagram available</p>}
     </div>
   );
 };
