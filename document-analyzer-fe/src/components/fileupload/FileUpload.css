@@ -1,0 +1,101 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.file-upload {
+    width: 30vw; /* 30% of screen width */
+    height: 300px; /* Fixed height */
+    border-radius: 12px; /* Rounded corners */
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    border: 2px solid #E5E7EB; /* Border color and thickness */
+  }
+
+  .upload-icon-container {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 2px dashed #2563EB; /* Adjust border styling if needed */
+    box-sizing: border-box; /* Ensures padding and border are included in dimensions */
+    background-color: #F3F4F6;
+}
+
+.upload-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000; /* Text color for visibility */
+}
+
+.upload-text-message {
+    font-size: 14px;
+    color: #6B7280; /* Text color for visibility */
+}
+
+.upload-button {
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #2563EB; /* Button color */
+    color: white;
+    font-size: larger;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.upload-button:hover {
+    background-color: #0056b3; /* Button hover effect */
+}
+
+.mermaid-chart {
+    width: 68vw; /* 70% of screen width, leaving space for file-upload */
+    height: 700px; /* Fixed height */
+    border-radius: 12px; /* Rounded corners */
+    background-color: #F9FAFB;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 2px solid #E5E7EB; /* Border color and thickness */
+    padding-left: 26px;
+    padding-right: 26px;
+    padding-bottom: 26px;
+    margin-left: 20px;
+  }
+
+  .mind-map-heading {
+    font-size: 24px; /* Adjust the font size as needed */
+    font-weight: bold; /* Make the text bold */
+    color: #333; /* Adjust the text color */
+    margin-bottom: 20px; /* Add some space below the heading */
+    margin-top: 20px; /* Add some space above the heading */
+    align-self: flex-start;
+    margin-left: 20px;
+  }
+
+  .mind-map-container {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px); 
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB; /* Adjust border styling if needed */
+    box-sizing: border-box; /* Ensures padding and border are included in dimensions */
+    background-color: #ffffff; 
+  }
