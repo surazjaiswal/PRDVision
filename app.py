@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
 
 # Load summarization model from Hugging Face
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1)
 
 # Function to extract text from PDF
 def extract_text_pdf(file_path):
