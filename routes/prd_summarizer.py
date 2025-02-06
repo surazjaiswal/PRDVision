@@ -37,8 +37,8 @@ class PRDSummarizer:
 
         if response.status_code == 200:
             summary_response = response.json().get("response", "")
-            summary_start_index = summary_response.find('</think>') + len('</think>')
-            self.summarized_text = summary_response[summary_start_index:].strip()
+            # summary_start_index = summary_response.find('</think>') + len('</think>')
+            self.summarized_text = summary_response.strip()
             print("Summarized Text:", self.summarized_text)
         else:
             raise Exception("Failed to summarize text with DeepSeek.")
@@ -62,8 +62,8 @@ class PRDSummarizer:
 
         if response.status_code == 200:
             user_flow_response = response.json().get("response", "")
-            user_flow_start_index = user_flow_response.find('</think>') + len('</think>')
-            self.user_flow_text = user_flow_response[user_flow_start_index:].strip()
+            # user_flow_start_index = user_flow_response.find('</think>') + len('</think>')
+            self.user_flow_text = user_flow_response.strip()
             print("User flow:", self.user_flow_text)
         else:
             raise Exception("Failed to summarize user flow with DeepSeek.")
@@ -90,18 +90,19 @@ class PRDSummarizer:
         """Generate Mermaid code based on the user flows."""
 
         prompt = f"""
-        You are an AI expert in workflow visualization and Mermaid.js. Your task is to generate valid and error-free Mermaid.js code based on the given user flow from a Product Requirement Document (PRD). The Mermaid code should be structured properly with clear nodes, decision points, and transitions.
+        You are an AI expert in workflow visualization and Mermaid.js. Your task is to generate valid and error-free Mermaid.js code based on the given user flow from a Product Requirement Document (PRD). The output must not contain any syntax errors or comments.
 
         Ensure the following:
 
         Use correct Mermaid flowchart syntax (graph TD or graph LR).
+        Validate all syntax to prevent errors.
         Represent decision points with ? and conditional branches (yes/no).
         Use subgraphs if the flow contains modular steps.
         Accurately capture loops, conditions, and alternate paths.
-        The output must be valid and error-free Mermaid.js code.
-        Do not include any extra explanation—only return the Mermaid.js code.
+        No comments should be included in the output.
+        Return only the Mermaid.js code, without any additional explanation.
         User Flow to Convert:
-        {self.user_flow_text}
+        {self.prd_text}
         """
 
         payload = {
