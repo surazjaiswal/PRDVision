@@ -12,14 +12,15 @@
   }
   
   .logo-icon {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     margin-right: 8px;
   }
   
   .logo-text {
     font-size: 20px;
     font-weight: bold;
+    align-self: center;
 }
 
 .divider {
