@@ -4,14 +4,11 @@ import pdfplumber
 import docx
 import requests
 import json
+from routes.prd_summarizer import PRDSummarizer
 
 # Flask setup
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
-
-# OpenRouter API settings
-OPENROUTER_API_KEY = "<YOUR_OPENROUTER_API_KEY>"
-DEESEEK_MODEL = "deepseek/deepseek-r1"
 
 # Function to extract text from PDF
 def extract_text_pdf(file_path):
@@ -60,33 +57,38 @@ def call_deepseek_summarization(text, diagram_type="mindmap"):
     <Your generated Mermaid.js code>
     ```
     """
-
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "HTTP-Referer": "<YOUR_SITE_URL>",  # Optional
-        "X-Title": "<YOUR_SITE_NAME>",  # Optional
+    
+    # Prepare the payload for the Ollama API
+    payload = {
+        "model": "deepseek-r1",
+        "prompt": prompt,
+        "stream": False
     }
 
-    data = {
-        "model": DEESEEK_MODEL,
-        "messages": [{"role": "user", "content": prompt}]
-    }
+    # try:
+    #     response = requests.post(OLLAMA_API_URL, json=payload)
+    #     response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
+    # except requests.exceptions.Timeout:
+    #     print("Request timed out. Please try again.")
+    #     return None, None
 
-    response = requests.post("https://openrouter.ai/api/v1/chat/completions", 
-                             headers=headers, data=json.dumps(data))
+    # if response.status_code != 200:
+    #     print("Error:", response.status_code, response.text)
+    #     return None, None
 
-    response_data = response.json()
+    # response_data = response.json()
+    # print("Response Data:", response_data)
+    
+    # if "response" not in response_data or not response_data["response"]:
+    #     print("Invalid response:", response_data)
+    #     return None, None
 
-    # Handle errors
-    if "choices" not in response_data:
-        return None, None
+    # content = response_data["response"]
 
-    content = response_data["choices"][0]["message"]["content"]
+    # # Extract summary and Mermaid code from response
+    # summary, mermaid_code = extract_summary_and_mermaid(content)
 
-    # Extract summary and Mermaid code from response
-    summary, mermaid_code = extract_summary_and_mermaid(content)
-
-    return summary, mermaid_code
+    # return summary, mermaid_code
 
 def extract_summary_and_mermaid(content):
     """
@@ -111,21 +113,53 @@ def extract_summary_and_mermaid(content):
 
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
-    data = request.get_json()
-    text = data['text']
+    # data = request.get_json()
+    # text = data['text']
+
+    # Hardcoded string for testing
+    text = """
+    Product Vision: Develop a mobile banking application
+    Key Requirements:
+    - The app should provide secure user authentication
+    - Users must be able to view account balances instantly
+    - Transfer functionality will support multiple bank accounts
+    - Real-time transaction notifications are crucial
+    - Implement multi-factor authentication for enhanced security
+    Key Features:
+    1. Biometric login options
+    2. Instant balance check
+    3. Secure fund transfers
+    4. Transaction history tracking
+    5. Spending analysis tools
+    Target Market:
+    Young professionals aged 25-40 who prefer digital banking solutions
+    """
     
     print("Received text for analysis:", text[:500])  # Debugging
 
+    # prd_text = """Your product requirement document text here"""
+    prd_summarizer = PRDSummarizer(text)
+    result = prd_summarizer.process()
+
+    print("Summarized Text:\n", result['summarized_text'])
+    print("\nUser Flows:\n", result['user_flows'])
+    print("\nUI Components:\n", result['ui_components'])
+    print("\nMermaid Diagram Code:\n", result['mermaid_code'])
+
+    # return call_deepseek_summarization(text, diagram_type="flowchart")
     # Call DeepSeek AI to get summarized text and Mermaid flowchart
-    summarized_text, mermaid_flowchart = call_deepseek_summarization(text, diagram_type="flowchart")
+    # summarized_text, mermaid_flowchart = call_deepseek_summarization(text, diagram_type="flowchart")
 
     # Fallback if AI fails
-    if not summarized_text or not mermaid_flowchart:
-        return jsonify({"error": "Failed to generate summary and Mermaid diagram."}), 500
+    # if not summarized_text or not mermaid_flowchart:
+    #     return jsonify({"error": "Failed to generate summary and Mermaid diagram."}), 500
+
+    # print("Summarized Text:", summarized_text)
+    # print("Mermaid Flowchart:", mermaid_flowchart)
 
     return jsonify({
-        "summarizedText": summarized_text,
-        "mermaid": mermaid_flowchart
+        "summarizedText": result['summarized_text'],
+        "mermaid": result['mermaid_code']
     })
 
 @app.route("/")
