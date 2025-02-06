@@ -2,13 +2,16 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pdfplumber
 import docx
-from transformers import pipeline
+import requests
+import json
 
+# Flask setup
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
 
-# Load summarization model from Hugging Face
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1)
+# OpenRouter API settings
+OPENROUTER_API_KEY = "<YOUR_OPENROUTER_API_KEY>"
+DEESEEK_MODEL = "deepseek/deepseek-r1"
 
 # Function to extract text from PDF
 def extract_text_pdf(file_path):
@@ -33,24 +36,78 @@ def after_request(response):
     response.headers["Access-Control-Allow-Methods"] = "OPTIONS, GET, POST"
     return response
 
-def generate_mermaid_flowchart(summary):
+# Function to call DeepSeek AI model via OpenRouter
+def call_deepseek_summarization(text, diagram_type="mindmap"):
     """
-    Converts summarized text into a Mermaid flowchart format.
+    Calls OpenRouter DeepSeek model to generate a summarized text and a Mermaid.js diagram.
     """
-    sentences = summary.split('. ')
-    nodes = []
-    edges = []
-    
-    for i, sentence in enumerate(sentences):
-        node_id = f"A{i}"
-        nodes.append(f'{node_id}["{sentence.strip()}"]')
-        if i > 0:
-            edges.append(f"A{i-1} --> {node_id}")
-    
-    # Assemble Mermaid flowchart
-    mermaid_chart = "graph TD\n    " + "\n    ".join(nodes + edges)
-    
-    return mermaid_chart
+    prompt = f"""
+    I have the following large text that describes a process, system, or requirements:
+
+    {text}
+
+    1. Summarize the text while preserving key decision points, steps, and relationships between entities.
+    2. Generate a structured Mermaid.js diagram in the format of a **{diagram_type}**.
+    3. Ensure the diagram correctly represents the flow, dependencies, and structure.
+
+    Return the response in this format:
+
+    Summary:
+    <Your summarized text>
+
+    Mermaid Code:
+    ```mermaid
+    <Your generated Mermaid.js code>
+    ```
+    """
+
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "HTTP-Referer": "<YOUR_SITE_URL>",  # Optional
+        "X-Title": "<YOUR_SITE_NAME>",  # Optional
+    }
+
+    data = {
+        "model": DEESEEK_MODEL,
+        "messages": [{"role": "user", "content": prompt}]
+    }
+
+    response = requests.post("https://openrouter.ai/api/v1/chat/completions", 
+                             headers=headers, data=json.dumps(data))
+
+    response_data = response.json()
+
+    # Handle errors
+    if "choices" not in response_data:
+        return None, None
+
+    content = response_data["choices"][0]["message"]["content"]
+
+    # Extract summary and Mermaid code from response
+    summary, mermaid_code = extract_summary_and_mermaid(content)
+
+    return summary, mermaid_code
+
+def extract_summary_and_mermaid(content):
+    """
+    Extracts the summary and Mermaid.js code from the AI response.
+    """
+    summary = ""
+    mermaid_code = ""
+
+    lines = content.split("\n")
+    is_mermaid = False
+
+    for line in lines:
+        if "Mermaid Code:" in line:
+            is_mermaid = True
+            continue
+        if is_mermaid:
+            mermaid_code += line + "\n"
+        else:
+            summary += line + " "
+
+    return summary.strip(), mermaid_code.strip()
 
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
@@ -59,44 +116,21 @@ def analyze_text():
     
     print("Received text for analysis:", text[:500])  # Debugging
 
-    # Summarize the text
-    summarized_text = summarizer(text, max_length=100, min_length=30, do_sample=False)[0]['summary_text']
-    
-    # Generate Mermaid.js flowchart from summary
-    mermaid_flowchart = generate_mermaid_flowchart(summarized_text)
+    # Call DeepSeek AI to get summarized text and Mermaid flowchart
+    summarized_text, mermaid_flowchart = call_deepseek_summarization(text, diagram_type="flowchart")
 
-    # Structured JSON Flowchart Example
-    flowchart_data = {
-        "type": "flowchart",
-        "nodes": [
-            {"id": 1, "label": "Start", "type": "start"},
-            {"id": 2, "label": "Process", "type": "process"},
-            {"id": 3, "label": "End", "type": "end"}
-        ],
-        "edges": [
-            {"from": 1, "to": 2},
-            {"from": 2, "to": 3}
-        ]
-    }
-
-    # Mind Map Example
-    mind_map_data = {
-        "type": "mindmap",
-        "nodes": [
-            {"id": 1, "label": "Main Idea", "children": [{"id": 2, "label": "Sub Idea 1"}, {"id": 3, "label": "Sub Idea 2"}]}
-        ]
-    }
+    # Fallback if AI fails
+    if not summarized_text or not mermaid_flowchart:
+        return jsonify({"error": "Failed to generate summary and Mermaid diagram."}), 500
 
     return jsonify({
         "summarizedText": summarized_text,
-        "flowchart": flowchart_data,
-        "mindMapData": mind_map_data,
         "mermaid": mermaid_flowchart
     })
 
 @app.route("/")
 def hello():
-    return "Hello, Flask API is running!"
+    return "Hello, Flask API is running with DeepSeek AI!"
 
 if __name__ == "__main__":
     app.run(port=8000, host='0.0.0.0', debug=True)
