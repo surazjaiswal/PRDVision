@@ -102,7 +102,7 @@ class PRDSummarizer:
         No comments should be included in the output.
         Return only the Mermaid.js code, without any additional explanation.
         User Flow to Convert:
-        {self.prd_text}
+        {self.user_flow_text}
         """
 
         payload = {
