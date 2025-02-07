@@ -2,8 +2,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pdfplumber
 import docx
-import requests
-import json
 from routes.prd_summarizer import PRDSummarizer
 
 # Flask setup
@@ -32,9 +30,6 @@ def after_request(response):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     response.headers["Access-Control-Allow-Methods"] = "OPTIONS, GET, POST"
     return response
-
-# Function to call DeepSeek AI model via OpenRouter
-def call_deepseek_summarization(text, diagram_type="mindmap"):
     """
     Calls OpenRouter DeepSeek model to generate a summarized text and a Mermaid.js diagram.
     """
@@ -62,7 +57,8 @@ def call_deepseek_summarization(text, diagram_type="mindmap"):
     payload = {
         "model": "deepseek-r1",
         "prompt": prompt,
-        "stream": False
+        "stream": False,
+        "temperature": 0.0,
     }
 
     # try:
@@ -90,72 +86,16 @@ def call_deepseek_summarization(text, diagram_type="mindmap"):
 
     # return summary, mermaid_code
 
-def extract_summary_and_mermaid(content):
-    """
-    Extracts the summary and Mermaid.js code from the AI response.
-    """
-    summary = ""
-    mermaid_code = ""
-
-    lines = content.split("\n")
-    is_mermaid = False
-
-    for line in lines:
-        if "Mermaid Code:" in line:
-            is_mermaid = True
-            continue
-        if is_mermaid:
-            mermaid_code += line + "\n"
-        else:
-            summary += line + " "
-
-    return summary.strip(), mermaid_code.strip()
-
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
-    # data = request.get_json()
-    # text = data['text']
-
-    # Hardcoded string for testing
-    text = """
-    Product Vision: Develop a mobile banking application
-    Key Requirements:
-    - The app should provide secure user authentication
-    - Users must be able to view account balances instantly
-    - Transfer functionality will support multiple bank accounts
-    - Real-time transaction notifications are crucial
-    - Implement multi-factor authentication for enhanced security
-    Key Features:
-    1. Biometric login options
-    2. Instant balance check
-    3. Secure fund transfers
-    4. Transaction history tracking
-    5. Spending analysis tools
-    Target Market:
-    Young professionals aged 25-40 who prefer digital banking solutions
-    """
+    data = request.get_json()
+    text = data['text']
     
     print("Received text for analysis:", text[:500])  # Debugging
 
     # prd_text = """Your product requirement document text here"""
     prd_summarizer = PRDSummarizer(text)
     result = prd_summarizer.process()
-
-    print("Summarized Text:\n", result['summarized_text'])
-    print("\nUser Flows:\n", result['user_flows'])
-    print("\nUI Components:\n", result['ui_components'])
-    print("\nMermaid Diagram Code:\n", result['mermaid_code'])
-
-    # return call_deepseek_summarization(text, diagram_type="flowchart")
-    # Call DeepSeek AI to get summarized text and Mermaid flowchart
-    # summarized_text, mermaid_flowchart = call_deepseek_summarization(text, diagram_type="flowchart")
-
-    # Fallback if AI fails
-    # if not summarized_text or not mermaid_flowchart:
-    #     return jsonify({"error": "Failed to generate summary and Mermaid diagram."}), 500
-
-    # print("Summarized Text:", summarized_text)
-    # print("Mermaid Flowchart:", mermaid_flowchart)
 
     return jsonify({
         "summarizedText": result['summarized_text'],

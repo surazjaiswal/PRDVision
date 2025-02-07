@@ -8,8 +8,6 @@ class PRDSummarizer:
         self.prd_text = prd_text
         self.summarized_text = ""
         self.user_flow_text = ""
-        self.user_flows = []
-        self.ui_components = []
 
     def summarize_text(self):
         prompt = f"""
@@ -30,7 +28,8 @@ class PRDSummarizer:
         payload = {
             "model": "deepseek-coder-v2",
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "temperature": 0.0
         }
         response = requests.post(OLLAMA_API_URL, json=payload)
         print("summarize_text response:", response.json())
@@ -54,7 +53,8 @@ class PRDSummarizer:
         payload = {
             "model": "deepseek-coder-v2",
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "temperature": 0.0
         }
 
         response = requests.post(OLLAMA_API_URL, json=payload)
@@ -67,24 +67,6 @@ class PRDSummarizer:
             print("User flow:", self.user_flow_text)
         else:
             raise Exception("Failed to summarize user flow with DeepSeek.")
-
-    def extract_ui_components(self):
-        prompt = f"""
-        You are an AI expert in product analysis and user experience design. Given a Product Requirement Document (PRD), your task is to extract and map the complete user flow. Identify key steps, decision points, and interactions a user takes while engaging with the product. Structure the user flow in a clear, step-by-step manner, including entry points, actions, transitions, and outcomes. If applicable, highlight alternative paths, edge cases, and dependencies. Present the result in an easy-to-understand format, such as a flowchart-style list or structured diagram description.
-
-        PRD Text to for User Flow Extraction:
-        {self.prd_text}
-        """
-        """Extract UI components needed for the user flows."""
-        # Assuming UI components are mentioned in the summarized text
-        ui_keywords = ["button", "input", "dropdown", "text field", "checkbox", "slider", "modal"]
-        ui_components = []
-
-        for keyword in ui_keywords:
-            if keyword in self.summarized_text.lower():
-                ui_components.append(keyword)
-
-        self.ui_components = ui_components
 
     def generate_mermaid_code(self):
         """Generate Mermaid code based on the user flows."""
@@ -108,7 +90,8 @@ class PRDSummarizer:
         payload = {
             "model": "deepseek-coder-v2",
             "prompt": prompt,
-            "stream": False
+            "stream": False,
+            "temperature": 0.0
         }
 
         response = requests.post(OLLAMA_API_URL, json=payload)
@@ -132,7 +115,6 @@ class PRDSummarizer:
         """Process the PRD text and return the summarized information."""
         self.summarize_text()
         self.extract_user_flows()
-        # self.extract_ui_components()
         
         # Generate Mermaid code
         mermaid_code = self.generate_mermaid_code()
