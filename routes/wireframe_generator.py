@@ -1,6 +1,7 @@
 from transformers import pipeline, T5Tokenizer, T5ForConditionalGeneration
 import requests
 import re
+import json
 
 OLLAMA_API_URL = "http://127.0.0.1:11434/api/generate"
 
@@ -12,26 +13,73 @@ class WireframeGenerator:
     def getWireframeComponents(self):
         """ AI-based text processing & structured wireframe generation """
 
-        # prompt = f"""
-        # You are an AI expert in product analysis and user experience design. Given a Product Requirement Document (PRD), your task is to extract and map the complete user flow. Identify key steps, decision points, and interactions a user takes while engaging with the product. Structure the user flow in a clear, step-by-step manner, including entry points, actions, transitions, and outcomes. If applicable, highlight alternative paths, edge cases, and dependencies. Present the result in an easy-to-understand format, such as a flowchart-style list or structured diagram description.
+        prompt = f"""
+            You are an AI expert in product analysis, user experience design, and UI component identification. Given a Product Requirement Document (PRD), your task is to extract and map the complete user flow while identifying the required UI components.
 
-        # PRD Text to for User Flow Extraction:
-        # {self.prd_text}
-        # """
+            ### Task:
+            1. **User Flow Extraction**:
+            - Identify key steps, decision points, and interactions a user takes while engaging with the product.
+            - Structure the user flow in a step-by-step manner, including entry points, actions, transitions, and outcomes.
+            - Highlight alternative paths, edge cases, and dependencies where applicable.
 
-        # payload = {
-        #     "model": "deepseek-coder-v2",
-        #     "prompt": prompt,
-        #     "stream": False
-        # }
+            2. **UI Component Generation**:
+            - Infer required UI screens and components based on extracted user actions.
+            - Generate a structured representation of UI elements for each identified screen.
+            - If applicable, introduce sample UI components to accommodate different scenarios.
 
-        # response = requests.post(OLLAMA_API_URL, json=payload)
-        # # print("extract_user_flows response:", response.json())
+            ### Output Format:
+            The output should be a structured JSON containing a list of screens, each with its relevant UI components. The structure should resemble the following:
 
-        # if response.status_code == 200:
-        #     wireframe_components = response.json().get("response", "")
-        # else:
-        #     raise Exception("Failed to summarize user flow with DeepSeek.")
+            ```json
+            {{
+                "screens": [
+                    {{
+                        "name": "Login Screen",
+                        "components": [
+                            {{"type": "TextField", "label": "Email", "placeholder": "Enter email"}},
+                            {{"type": "TextField", "label": "Password", "placeholder": "Enter password", "secure": true}},
+                            {{"type": "Button", "label": "Sign In", "style": "primary"}},
+                            {{"type": "Link", "label": "Forgot Password?", "action": "reset_password"}},
+                            {{"type": "Button", "label": "Create Account", "style": "secondary"}}
+                        ]
+                    }},
+                    {{
+                        "name": "Payment Screen",
+                        "components": [
+                            {{"type": "ButtonGroup", "options": ["Bank", "Paypal", "Stripe", "Cash"]}},
+                            {{"type": "Button", "label": "Proceed", "style": "primary"}}
+                        ]
+                    }}
+                ]
+            }}
+
+            {json.dumps(self.prd_text)} 
+
+            """
+
+        payload = {
+            "model": "deepseek-coder-v2",
+            "prompt": prompt,
+            "stream": False
+        }
+
+        response = requests.post(OLLAMA_API_URL, json=payload)
+        print("extract_user_flows response:", response.json())
+
+        if response.status_code == 200:
+            response_text = response.json().get("response", "")
+            
+            # Extract JSON content from the response text
+            json_match = re.search(r'```json\n(.*?)\n```', response_text, re.DOTALL)
+
+            if json_match:
+                wireframe_components = json.loads(json_match.group(1))  # Convert to a Python dictionary
+            else:
+                raise Exception("Failed to extract valid JSON from the response.")
+        else:
+            raise Exception("Failed to summarize user flow with DeepSeek.")
+
+        return wireframe_components
 
         # Sample wireframe template (adjustable for AI-generated structure)
         TEMPLATE_UI_COMPONENTS = {

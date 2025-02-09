@@ -24,10 +24,12 @@ def generate_wireframe():
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
 
-    return defaultResponse()
+    
 
     data = request.get_json()
     text = data['text']
+
+    return defaultResponse(text)
     
     print("Received text for analysis:", text)  # Debugging
 
@@ -49,7 +51,7 @@ def analyze_text():
     return resJson
 
 
-def defaultResponse():
+def defaultResponse(text):
     summarized_text = """
     AI-Based Quiz System
     The AI-Based Quiz System is an intelligent platform designed to generate, evaluate, and analyze quizzes using artificial intelligence (AI). It supports multiple question formats, adaptive learning, real-time feedback, and performance analytics, catering to students, professionals, and organizations seeking interactive knowledge enhancement.
@@ -146,6 +148,7 @@ def defaultResponse():
     """
     user_flows = []
     ui_components = []
+    # wireframes = getWireframes(text)
     wireframes = getSampleWireframes()
 
 
@@ -159,55 +162,62 @@ def defaultResponse():
 
     return resJson
 
+def getWireframes(text):
+    generator = WireframeGenerator(text)
+    result = generator.process()
+    return result
+    
+
 def getSampleWireframes():
     return {
     "screens": [
-      {
-        "name": "Login Screen",
-        "components": [
-          { "type": "TextField", "label": "Username or Email" },
-          { "type": "TextField", "label": "Password" },
-          { "type": "Checkbox", "label": "Remember Me" },
-          { "type": "Button", "label": "Login" },
-          { "type": "Link", "label": "Forgot Password?" },
-          { "type": "Link", "label": "Sign Up" }
-        ]
-      },
-      {
-        "name": "Feed Screen",
-        "components": [
-          { "type": "Navbar", "items": ["Home", "Search", "Notifications", "Profile"] },
-          { "type": "Post", "author": "User1", "content": "This is a sample post", "media": "false" },
-          { "type": "Post", "author": "User2", "content": "Another post with an image", "media": "true" },
-          { "type": "Button", "label": "Create Post" }
-        ]
-      },
-      {
-        "name": "Media Screen",
-        "components": [
-          { "type": "Title", "text": "Media Gallery" },
-          { "type": "Grid", "items": [
-            { "type": "Image", "src": "image1.jpg" },
-            { "type": "Image", "src": "image2.jpg" },
-            { "type": "Video", "src": "video1.mp4" }
-          ] },
-          { "type": "Button", "label": "Upload Media" }
-        ]
-      },
-      {
-        "name": "Poll Screen",
-        "components": [
-          { "type": "Title", "text": "Create a Poll" },
-          { "type": "TextField", "label": "Poll Question" },
-          { "type": "TextField", "label": "Option 1" },
-          { "type": "TextField", "label": "Option 2" },
-          { "type": "TextField", "label": "Option 3" },
-          { "type": "Button", "label": "Submit Poll" },
-          { "type": "List", "items": ["Active Polls", "Past Polls"] }
-        ]
-      }
+        {
+            "name": "Login/Register Screen",
+            "components": [
+                {"type": "TextField", "label": "Email", "placeholder": "Enter email"},
+                {"type": "TextField", "label": "Password", "placeholder": "Enter password", "secure": True},
+                {"type": "Button", "label": "Sign In", "style": "primary"},
+                {"type": "Button", "label": "Register", "style": "secondary"}
+            ]
+        },
+        {
+            "name": "Dashboard",
+            "components": [
+                {"type": "Card", "title": "Quiz History", "description": "View past quizzes"},
+                {"type": "Card", "title": "Recommendations", "description": "AI suggested quizzes"},
+                {"type": "Card", "title": "Stats", "description": "Performance analytics"}
+            ]
+        },
+        {
+            "name": "Quiz Page",
+            "components": [
+                {"type": "QuestionDisplay", "questionType": "MCQs", "options": ["Option A", "Option B", "Option C", "Option D"]},
+                {"type": "Timer", "duration": 300},
+                {"type": "AnswerInput", "placeholder": "Enter answer"}
+            ]
+        },
+        {
+            "name": "Results Page",
+            "components": [
+                {"type": "ScoreDisplay", "score": "8/10"},
+                {"type": "Feedback", "feedback": "Good job, some answers need more explanation."},
+                {"type": "AnswersList", "answers": ["Correct", "Incorrect"]}
+            ]
+        },
+        {
+            "name": "Admin Panel",
+            "components": [
+                {"type": "Table", "title": "Manage Users", "columns": ["Username", "Email"], "actions": ["Edit", "Delete"]},
+                {"type": "Table", "title": "Manage Quizzes", "columns": ["Quiz Name", "Topic"], "actions": ["View Results", "Delete"]},
+                {"type": "SettingsForm", "fields": [
+                    {"label": "Theme", "options": ["Light", "Dark"]},
+                    {"label": "Language", "options": ["English", "Spanish"]}
+                ]}
+            ]
+        }
     ]
-  }
+}
+
   
 
 
