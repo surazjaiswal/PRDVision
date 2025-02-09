@@ -4,9 +4,8 @@ import MermaidBgIcon from '../../assets/ic_mermaid_container_bg.png';
 import './FileUpload.css';
 import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
-import MermaidRenderer from '../mermaid/MermaidRenderer'; 
+import MermaidRenderer from '../mermaid/MermaidRenderer';
 import mammoth from 'mammoth';
-
 
 // Set the pdf.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
@@ -17,21 +16,16 @@ function FileUpload() {
   const [mermaidChart, setMermaidChart] = useState('');
   const [availableKeys, setAvailableKeys] = useState([]);
   const [selectedKey, setSelectedKey] = useState('');
-  const [savedReponse, saveReponse] = useState(null);
+  const [savedResponse, setSavedResponse] = useState(null);
   const [summaryText, setSummaryText] = useState('');
   const [isSummaryView, setIsSummaryView] = useState(false);
+  const [isResponseReceived, setIsResponseReceived] = useState(false);
   const zoomRef = useRef(null);
   const zoomLevel = useRef(1);
 
   useEffect(() => {
-    if (selectedKey === 'summarizedText') {
-      setIsSummaryView(true);
-    } else {
-      setIsSummaryView(false);
-    }
+    setIsSummaryView(selectedKey === 'summarizedText');
   }, [selectedKey]);
-
-  
 
   const handleFileChange = async () => {
     if (!selectedFile) {
@@ -41,6 +35,7 @@ function FileUpload() {
 
     let extractedText = '';
     setLoading(true);
+    setIsResponseReceived(false); // Reset response state
 
     try {
       if (selectedFile.type === "application/pdf") {
@@ -97,8 +92,7 @@ function FileUpload() {
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
-          const arrayBuffer = e.target.result;
-          const result = await mammoth.extractRawText({ arrayBuffer });
+          const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
           resolve(result.value);
         } catch (error) {
           reject(error);
@@ -110,8 +104,7 @@ function FileUpload() {
   };
 
   const preprocessText = (text) => {
-    return text
-      .replace(/•|●|▪|◦|‣|★|☆/g, '')
+    return text.replace(/•|●|▪|◦|‣|★|☆/g, '')
       .replace(/[^\w\s.,!?]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
@@ -123,27 +116,17 @@ function FileUpload() {
 
     try {
       const response = await axios.post('http://127.0.0.1:8000/analyze', { text }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       });
 
       console.log("Response from backend:", response.data);
 
-      // Extract response data
-      const resData = response.data
-      saveReponse(resData);
-      
-      // Extract available keys
-      const keys = Object.keys(response.data);
-      setAvailableKeys(keys);
-
-      // Set default chart with first key
-      if (keys.length > 0) {
-        setSelectedKey(keys[0]);
-        setMermaidChart(response.data[keys[0]]);
-      }
+      const resData = response.data;
+      setSavedResponse(resData);
+      setAvailableKeys(Object.keys(resData));
+      setSelectedKey(Object.keys(resData)[0]);
+      setMermaidChart(Object.values(resData)[0]);
+      setIsResponseReceived(true);
 
     } catch (error) {
       console.error("Error analyzing text:", error);
@@ -158,15 +141,10 @@ function FileUpload() {
 
     if (newKey === 'summarizedText') {
       setIsSummaryView(true);
-      setSummaryText("Loading summary...");
-
-      // Simulating summary text request
-      setTimeout(() => {
-        setSummaryText(savedReponse["summarizedText"]);
-      }, 1000);
+      setSummaryText(savedResponse["summarizedText"]);
     } else {
       setIsSummaryView(false);
-      setMermaidChart(savedReponse[newKey]);
+      setMermaidChart(savedResponse[newKey]);
     }
   };
 
@@ -184,10 +162,8 @@ function FileUpload() {
     }
   };
 
-
   return (
     <div className="container">
-      {/* File Upload Section */}
       <div className="file-upload">
         <div className="upload-icon-container">
           <img src={UploadIcon} alt="UploadIcon" className="upload-icon" />
@@ -197,12 +173,7 @@ function FileUpload() {
           <div className="upload-controls">
             <label className="upload-button">
               Choose File
-              <input
-                type="file"
-                accept=".pdf,.txt,.docx"
-                hidden
-                onChange={(e) => setSelectedFile(e.target.files[0])}
-              />
+              <input type="file" accept=".pdf,.txt,.docx" hidden onChange={(e) => setSelectedFile(e.target.files[0])} />
             </label>
 
             <button className="generate-button" onClick={handleFileChange} disabled={!selectedFile}>
@@ -215,21 +186,21 @@ function FileUpload() {
         {loading && <p className="loading-message">Processing document...</p>}
       </div>
 
-      {/* Mind Map Section */}
       <div className="mermaid-chart">
-        {/* Dropdown Menu */}
-        <div className="dropdown-container">
-          <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
-            {availableKeys.map((key, index) => (
-              <option key={index} value={key}>{key}</option>
-            ))}
-            <option value="summarizedText">Summarize</option>
-          </select>
-        </div>
+        {!isResponseReceived ? (
+          <p className="default-message">Waiting for analysis...</p>
+        ) : (
+          <div className="dropdown-container">
+            <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
+              {availableKeys.map((key, index) => (
+                <option key={index} value={key}>{key}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
-        {/* Mermaid Container */}
         <div className="mind-map-container">
-          {loading ? (
+        {loading ? (
             <div className="loader">Loading...</div>
           ) : isSummaryView ? (
             <div className="summary-view">
