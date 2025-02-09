@@ -1,143 +1,22 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import pdfplumber
-import docx
-import requests
-import json
 from routes.prd_summarizer import PRDSummarizer
 
 # Flask setup
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
 
-# Function to extract text from PDF
-def extract_text_pdf(file_path):
-    print("Extracting text from PDF...")
-    with pdfplumber.open(file_path) as pdf:
-        text = ''.join(page.extract_text() for page in pdf.pages if page.extract_text())
-    print("Extracted PDF Text:", text[:500])  # Debugging
-    return text
-
-# Function to extract text from DOCX
-def extract_text_docx(file_path):
-    print("Extracting text from DOCX...")
-    doc = docx.Document(file_path)
-    text = '\n'.join([para.text for para in doc.paragraphs])
-    print("Extracted DOCX Text:", text[:500])  # Debugging
-    return text
-
-@app.after_request
-def after_request(response):
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-    response.headers["Access-Control-Allow-Methods"] = "OPTIONS, GET, POST"
-    return response
-
-# Function to call DeepSeek AI model via OpenRouter
-def call_deepseek_summarization(text, diagram_type="mindmap"):
-    """
-    Calls OpenRouter DeepSeek model to generate a summarized text and a Mermaid.js diagram.
-    """
-    prompt = f"""
-    I have the following large text that describes a process, system, or requirements:
-
-    {text}
-
-    1. Summarize the text while preserving key decision points, steps, and relationships between entities.
-    2. Generate a structured Mermaid.js diagram in the format of a **{diagram_type}**.
-    3. Ensure the diagram correctly represents the flow, dependencies, and structure.
-
-    Return the response in this format:
-
-    Summary:
-    <Your summarized text>
-
-    Mermaid Code:
-    ```mermaid
-    <Your generated Mermaid.js code>
-    ```
-    """
-    
-    # Prepare the payload for the Ollama API
-    payload = {
-        "model": "deepseek-r1",
-        "prompt": prompt,
-        "stream": False
-    }
-
-    # try:
-    #     response = requests.post(OLLAMA_API_URL, json=payload)
-    #     response.raise_for_status()  # Raise an error for bad responses (4xx, 5xx)
-    # except requests.exceptions.Timeout:
-    #     print("Request timed out. Please try again.")
-    #     return None, None
-
-    # if response.status_code != 200:
-    #     print("Error:", response.status_code, response.text)
-    #     return None, None
-
-    # response_data = response.json()
-    # print("Response Data:", response_data)
-    
-    # if "response" not in response_data or not response_data["response"]:
-    #     print("Invalid response:", response_data)
-    #     return None, None
-
-    # content = response_data["response"]
-
-    # # Extract summary and Mermaid code from response
-    # summary, mermaid_code = extract_summary_and_mermaid(content)
-
-    # return summary, mermaid_code
-
-def extract_summary_and_mermaid(content):
-    """
-    Extracts the summary and Mermaid.js code from the AI response.
-    """
-    summary = ""
-    mermaid_code = ""
-
-    lines = content.split("\n")
-    is_mermaid = False
-
-    for line in lines:
-        if "Mermaid Code:" in line:
-            is_mermaid = True
-            continue
-        if is_mermaid:
-            mermaid_code += line + "\n"
-        else:
-            summary += line + " "
-
-    return summary.strip(), mermaid_code.strip()
 
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
-    # data = request.get_json()
-    # text = data['text']
 
-    # Hardcoded string for testing
-    text = """
-    Product Vision: Develop a mobile banking application
-    Key Requirements:
-    - The app should provide secure user authentication
-    - Users must be able to view account balances instantly
-    - Transfer functionality will support multiple bank accounts
-    - Real-time transaction notifications are crucial
-    - Implement multi-factor authentication for enhanced security
-    Key Features:
-    1. Biometric login options
-    2. Instant balance check
-    3. Secure fund transfers
-    4. Transaction history tracking
-    5. Spending analysis tools
-    Target Market:
-    Young professionals aged 25-40 who prefer digital banking solutions
-    """
+    return defaultResponse()
+
+    data = request.get_json()
+    text = data['text']
     
-    print("Received text for analysis:", text[:500])  # Debugging
+    print("Received text for analysis:", text)  # Debugging
 
-    # prd_text = """Your product requirement document text here"""
     prd_summarizer = PRDSummarizer(text)
     result = prd_summarizer.process()
 
@@ -146,21 +25,124 @@ def analyze_text():
     print("\nUI Components:\n", result['ui_components'])
     print("\nMermaid Diagram Code:\n", result['mermaid_code'])
 
-    # return call_deepseek_summarization(text, diagram_type="flowchart")
-    # Call DeepSeek AI to get summarized text and Mermaid flowchart
-    # summarized_text, mermaid_flowchart = call_deepseek_summarization(text, diagram_type="flowchart")
-
-    # Fallback if AI fails
-    # if not summarized_text or not mermaid_flowchart:
-    #     return jsonify({"error": "Failed to generate summary and Mermaid diagram."}), 500
-
-    # print("Summarized Text:", summarized_text)
-    # print("Mermaid Flowchart:", mermaid_flowchart)
-
-    return jsonify({
+    resJson = jsonify({
         "summarizedText": result['summarized_text'],
-        "mermaid": result['mermaid_code']
+        "mermaid": result['mermaid_code'],
+        "userFlow": result['user_flows'],
+        "uiComponent": result['ui_components']
     })
+
+    return resJson
+
+
+def defaultResponse():
+    summarized_text = """
+AI-Based Quiz System
+The AI-Based Quiz System is an intelligent platform designed to generate, evaluate, and analyze quizzes using artificial intelligence (AI). It supports multiple question formats, adaptive learning, real-time feedback, and performance analytics, catering to students, professionals, and organizations seeking interactive knowledge enhancement.
+
+Key Features:
+✅ AI-Generated Quizzes – Supports MCQs, True/False, Fill in the Blanks, and Short Answers
+✅ Adaptive Learning – Adjusts difficulty based on user performance
+✅ Quiz Modes – Timer-based and untimed quizzes
+✅ Real-Time Feedback – Provides explanations and performance insights
+✅ Custom Quizzes – Instructors can manually create quizzes or generate them using AI
+✅ Performance Analytics – Tracks progress and suggests personalized improvement plans
+
+Core UI Components:
+📌 Login/Register Screen – Secure authentication for users
+📌 Dashboard – Displays quiz history, recommendations, and user stats
+📌 Quiz Page – Interactive interface with questions, answer inputs, and timers
+📌 Results Page – Score breakdown, AI feedback, and improvement suggestions
+
+System Architecture:
+🔹 Backend: API-driven architecture using Node.js, Django, or Flask
+🔹 AI Integration: Powered by OpenAI & Hugging Face models
+🔹 Database: Supports PostgreSQL & MongoDB
+🔹 Frontend: Web (React.js/Next.js) & Mobile (Flutter/React Native)
+
+Future Enhancements:
+🚀 AI-Powered Voice-Based Quizzes – Voice-activated quiz interactions
+🏆 Gamification Elements – Leaderboards, badges, and achievement rewards
+📚 LMS Integration – Seamless connection with learning management systems
+
+Stay ahead with AI-driven learning & assessment! 🎯 """
+    mermaid_code = """graph TD;
+    subgraph Login/Register
+        A[Login/Register Screen] --> B{Auth Success?}
+        B -- Yes --> C[Dashboard]
+        B -- No --> D[Error Message]
+        D --> E{Retry or Register?}
+        E --> F[Login/Register Screen]
+        E --> G[Dashboard]
+    end
+    
+    subgraph Dashboard
+        H[View Past Quizzes] --> I[Quiz History Displayed]
+        J[See Recommendations] --> K[Recommended Quiz Displayed]
+        L[Initiate New Quiz] --> M[Quiz Page]
+    end
+    
+    subgraph Quiz Page
+        N[Question View] --> O{Immediate Feedback?}
+        O -- Yes --> P[Next Question]
+        O -- No --> Q[End of Timer]
+        Q --> R[Results Page]
+    end
+    
+    subgraph Results Page
+        S[Review Answers] --> T[AI Feedback]
+        U[Retake Quiz] --> M
+        V[Continue with Other Quizzes] --> C
+    end
+    
+    subgraph Custom Quiz Creation
+        W[Instructor Accesses Tools] --> X{Manual or AI Assistance?}
+        X -- Manual --> Y[Create Questions and Answers]
+        X -- AI --> Z[AI Generates Content]
+        Y --> AA[Custom Quiz Available]
+        Z --> AA
+    end
+    
+    subgraph Performance Monitoring
+        BB[Instructor Views Analytics] --> CC[Detailed Reports]
+        DD[Personalized Improvement Plans] --> EE[Future Enhancements]
+    end
+    
+    subgraph Future Enhancements
+        FF[AI-powered Voice Quizzes] --> GG[Gamification Elements]
+        HH[Integration with LMS] --> II[Expected in Future Versions]
+    end
+    
+    subgraph Technical Issues
+        JJ[System Error] --> KK[Retry or Manual Reset]
+        LL[Incorrect Answer Display] --> MM[Manual Correction]
+    end
+    
+    subgraph User Errors
+        NN[Mistyping Credentials] --> OO[Guidelines for Correct Path]
+        PP[Selecting Wrong Answers] --> QQ[Corrective Actions]
+        RR[Navigating Incorrectly] --> SS[UI Re-orientation]
+    end
+    
+    subgraph Performance Anxiety
+        TT[Time Pressure] --> UU[Hints and Fast Options]
+        VV[Accuracy Focused] --> WW[No Jeopardy]
+    end
+    """
+    user_flows = []
+    ui_components = []
+
+
+    resJson = jsonify({
+        "summarizedText": summarized_text,
+        "mermaid": mermaid_code,
+        "userFlow": user_flows,
+        "uiComponent": ui_components,
+    })
+
+    return resJson
+
+
 
 @app.route("/")
 def hello():

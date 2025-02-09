@@ -1,46 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import UploadIcon from '../../assets/ic_upload_icon.svg';
 import MermaidBgIcon from '../../assets/ic_mermaid_container_bg.png';
 import './FileUpload.css';
 import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
-import MermaidRenderer from '../mermaid/MermaidRenderer'; // New component for Mermaid.js rendering
+import MermaidRenderer from '../mermaid/MermaidRenderer'; 
+import mammoth from 'mammoth';
+
 
 // Set the pdf.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
 
 function FileUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [loading, setLoading] = useState(false); // Optional, if you want to show loading state
+  const [loading, setLoading] = useState(false);
   const [mermaidChart, setMermaidChart] = useState('');
+  const [availableKeys, setAvailableKeys] = useState([]);
+  const [selectedKey, setSelectedKey] = useState('');
+  const [savedReponse, saveReponse] = useState(null);
+  const [summaryText, setSummaryText] = useState('');
+  const [isSummaryView, setIsSummaryView] = useState(false);
+  const zoomRef = useRef(null);
+  const zoomLevel = useRef(1);
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file && file.type === "application/pdf") {
-      setSelectedFile(file.name);
-      const pdfData = await readPDF(file);
-      const extractedText = await extractTextFromPDF(pdfData);
-      await analyzeText(extractedText);
+  useEffect(() => {
+    if (selectedKey === 'summarizedText') {
+      setIsSummaryView(true);
     } else {
-      alert("Please select a valid PDF file.");
+      setIsSummaryView(false);
+    }
+  }, [selectedKey]);
+
+  
+
+  const handleFileChange = async () => {
+    if (!selectedFile) {
+      alert("Please select a valid document first.");
+      return;
+    }
+
+    let extractedText = '';
+    setLoading(true);
+
+    try {
+      if (selectedFile.type === "application/pdf") {
+        extractedText = await extractTextFromPDF(await readPDF(selectedFile));
+      } else if (selectedFile.type === "text/plain") {
+        extractedText = await extractTextFromTXT(selectedFile);
+      } else if (selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+        extractedText = await extractTextFromDOCX(selectedFile);
+      } else {
+        alert("Unsupported file format. Please upload a PDF, TXT, or DOCX file.");
+        return;
+      }
+
+      const cleanedText = preprocessText(extractedText);
+      await analyzeText(cleanedText);
+    } catch (error) {
+      console.error("Error processing file:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Read the PDF file as a binary string
   const readPDF = (file) => {
     return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
-      fileReader.onload = (e) => {
-        resolve(e.target.result); // Return the file as a binary string
-      };
+      fileReader.onload = (e) => resolve(e.target.result);
       fileReader.onerror = (error) => reject(error);
       fileReader.readAsArrayBuffer(file);
     });
   };
 
-  // Extract text from PDF using pdfjs-dist
   const extractTextFromPDF = async (pdfData) => {
-    console.log("Extracting text from PDF...");
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
     let text = '';
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
@@ -48,57 +80,180 @@ function FileUpload() {
       const textContent = await page.getTextContent();
       text += textContent.items.map(item => item.str).join(' ');
     }
-    console.log("Extracted PDF Text:", text);
     return text;
   };
 
-  // Send the extracted text to the backend API
+  const extractTextFromTXT = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (error) => reject(error);
+      reader.readAsText(file);
+    });
+  };
+
+  const extractTextFromDOCX = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const arrayBuffer = e.target.result;
+          const result = await mammoth.extractRawText({ arrayBuffer });
+          resolve(result.value);
+        } catch (error) {
+          reject(error);
+        }
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
+  const preprocessText = (text) => {
+    return text
+      .replace(/•|●|▪|◦|‣|★|☆/g, '')
+      .replace(/[^\w\s.,!?]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
   const analyzeText = async (text) => {
-    console.log("Sending extracted text to backend...", text);
-    setLoading(true); // Show loading state
+    console.log("Sending cleaned text to backend...", text);
+    setLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://127.0.0.1:8000/analyze', // Your API endpoint
-        { text },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-        }
-      );
+      const response = await axios.post('http://127.0.0.1:8000/analyze', { text }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
 
       console.log("Response from backend:", response.data);
-      setMermaidChart(response.data.mermaid);
+
+      // Extract response data
+      const resData = response.data
+      saveReponse(resData);
+      
+      // Extract available keys
+      const keys = Object.keys(response.data);
+      setAvailableKeys(keys);
+
+      // Set default chart with first key
+      if (keys.length > 0) {
+        setSelectedKey(keys[0]);
+        setMermaidChart(response.data[keys[0]]);
+      }
+
     } catch (error) {
       console.error("Error analyzing text:", error);
     } finally {
-      setLoading(false); // Hide loading state
+      setLoading(false);
     }
   };
 
+  const handleKeySelection = (event) => {
+    const newKey = event.target.value;
+    setSelectedKey(newKey);
+
+    if (newKey === 'summarizedText') {
+      setIsSummaryView(true);
+      setSummaryText("Loading summary...");
+
+      // Simulating summary text request
+      setTimeout(() => {
+        setSummaryText(savedReponse["summarizedText"]);
+      }, 1000);
+    } else {
+      setIsSummaryView(false);
+      setMermaidChart(savedReponse[newKey]);
+    }
+  };
+
+  const zoomIn = () => {
+    if (zoomRef.current) {
+      zoomLevel.current += 0.2;
+      zoomRef.current.style.transform = `scale(${zoomLevel.current})`;
+    }
+  };
+
+  const zoomOut = () => {
+    if (zoomRef.current) {
+      zoomLevel.current = Math.max(0.5, zoomLevel.current - 0.2);
+      zoomRef.current.style.transform = `scale(${zoomLevel.current})`;
+    }
+  };
+
+
   return (
     <div className="container">
+      {/* File Upload Section */}
       <div className="file-upload">
         <div className="upload-icon-container">
           <img src={UploadIcon} alt="UploadIcon" className="upload-icon" />
-          <p className="upload-text">Drop your PRD PDF here</p>
+          <p className="upload-text">Drop your PRD document here</p>
           <p className="upload-text-message">or click to browse</p>
-          <label className="upload-button">
-            Choose File
-            <input type="file" accept=".pdf" onChange={handleFileChange} hidden />
-          </label>
+
+          <div className="upload-controls">
+            <label className="upload-button">
+              Choose File
+              <input
+                type="file"
+                accept=".pdf,.txt,.docx"
+                hidden
+                onChange={(e) => setSelectedFile(e.target.files[0])}
+              />
+            </label>
+
+            <button className="generate-button" onClick={handleFileChange} disabled={!selectedFile}>
+              Generate
+            </button>
+          </div>
         </div>
-        {selectedFile && <p className="file-name">{selectedFile}</p>}
-        {loading && <p>Loading...</p>} {/* Optional loading message */}
+
+        {selectedFile && <p className="file-name">{selectedFile.name}</p>}
+        {loading && <p className="loading-message">Processing document...</p>}
       </div>
 
+      {/* Mind Map Section */}
       <div className="mermaid-chart">
-        <h2 className="mind-map-heading">MindMap</h2>
-        <div className="mind-map-container">
-          {mermaidChart ? <MermaidRenderer chartDefinition={mermaidChart} /> : <img src={MermaidBgIcon} alt="MermaidBgIcon"/>}
+        {/* Dropdown Menu */}
+        <div className="dropdown-container">
+          <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
+            {availableKeys.map((key, index) => (
+              <option key={index} value={key}>{key}</option>
+            ))}
+            <option value="summarizedText">Summarize</option>
+          </select>
         </div>
+
+        {/* Mermaid Container */}
+        <div className="mind-map-container">
+          {loading ? (
+            <div className="loader">Loading...</div>
+          ) : isSummaryView ? (
+            <div className="summary-view">
+              <h3>Summarized Text</h3>
+              <p>{summaryText}</p>
+            </div>
+          ) : (
+            <div className="mermaid-wrapper" ref={zoomRef}>
+              {mermaidChart ? (
+                <MermaidRenderer chartDefinition={mermaidChart} />
+              ) : (
+                <img src={MermaidBgIcon} alt="MermaidBgIcon" />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Zoom Controls */}
+        {!isSummaryView && (
+          <div className="zoom-controls">
+            <button onClick={zoomIn} className="zoom-btn">+</button>
+            <button onClick={zoomOut} className="zoom-btn">-</button>
+          </div>
+        )}
       </div>
     </div>
   );

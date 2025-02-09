@@ -1,103 +1,294 @@
+/* Main Container */
 .container {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 80px;
-    margin-right: 80px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+  gap: 20px;
+}
 
+/* File Upload Section */
 .file-upload {
-    width: 30vw; /* 30% of screen width */
-    height: 300px; /* Fixed height */
-    border-radius: 12px; /* Rounded corners */
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 12px;
-    border: 2px solid #E5E7EB; /* Border color and thickness */
-  }
+  flex: 1;
+  min-width: 300px; /* Ensures it doesn’t get too small */
+  max-width: 400px; /* Keeps upload area readable */
+  height: 320px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  border: 2px solid #E5E7EB;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
 
-  .upload-icon-container {
-    width: calc(100% - 16px);
-    height: calc(100% - 16px); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    border: 2px dashed #2563EB; /* Adjust border styling if needed */
-    box-sizing: border-box; /* Ensures padding and border are included in dimensions */
-    background-color: #F3F4F6;
+/* Hover Effect for Upload */
+.file-upload:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Upload Icon Container */
+.upload-icon-container {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px dashed #2563EB;
+  box-sizing: border-box;
+  background-color: #F3F4F6;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Change Background on Hover */
+.upload-icon-container:hover {
+  background-color: #e6efff;
 }
 
 .upload-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #000000; /* Text color for visibility */
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
 }
 
 .upload-text-message {
-    font-size: 14px;
-    color: #6B7280; /* Text color for visibility */
+  font-size: 14px;
+  color: #6B7280;
 }
 
+/* Upload Controls Container */
+.upload-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+
+/* Upload Button (Choose File) */
 .upload-button {
-    margin-top: 10px;
-    padding: 12px;
-    background-color: #2563EB; /* Button color */
-    color: white;
-    font-size: larger;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #2563EB, #0056b3);
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .upload-button:hover {
-    background-color: #0056b3; /* Button hover effect */
+  background: linear-gradient(135deg, #0056b3, #2563EB);
+  transform: scale(1.05);
 }
 
+/* Generate Button */
+.generate-button {
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #10B981, #047857); /* Green theme */
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.generate-button:hover {
+  background: linear-gradient(135deg, #047857, #10B981);
+  transform: scale(1.05);
+}
+
+.generate-button:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading Message */
+.loading-message {
+  font-size: 14px;
+  color: #ff6600;
+  font-weight: bold;
+}
+
+/* Uploaded File Name */
+.file-name {
+  font-size: 14px;
+  color: #333;
+  margin-top: 8px;
+}
+
+
+/* Mind Map Section */
 .mermaid-chart {
-    width: 68vw; /* 70% of screen width, leaving space for file-upload */
-    height: 700px; /* Fixed height */
-    border-radius: 12px; /* Rounded corners */
-    background-color: #F9FAFB;
-    display: flex;
+  flex: 2;
+  min-width: 500px; /* Ensures proper width */
+  height: auto;
+  border-radius: 12px;
+  background-color: #F9FAFB;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px solid #E5E7EB;
+  padding: 20px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Hover Effect for MindMap */
+.mermaid-chart:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* MindMap Heading */
+.mind-map-heading {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Mind Map Container */
+.mind-map-container {
+  width: 100%;
+  min-height: 400px;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Background Effect for Empty MindMap */
+.mind-map-container img {
+  width: 50%;
+  opacity: 0.7;
+  transition: transform 0.3s ease-in-out;
+}
+
+.mind-map-container img:hover {
+  transform: scale(1.1);
+}
+
+.custom-dropdown {
+  width: 200px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.custom-dropdown:focus {
+  outline: none;
+  border-color: #007BFF;
+}
+
+.loader {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007BFF;
+}
+
+.summary-view {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 80%;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.zoom-btn {
+  background: #007BFF;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.zoom-btn:hover {
+  background: #0056b3;
+}
+
+
+/* 🔹 RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+  .container {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 2px solid #E5E7EB; /* Border color and thickness */
-    padding-left: 26px;
-    padding-right: 26px;
-    padding-bottom: 26px;
-    margin-left: 20px;
   }
 
-  .mind-map-heading {
-    font-size: 24px; /* Adjust the font size as needed */
-    font-weight: bold; /* Make the text bold */
-    color: #333; /* Adjust the text color */
-    margin-bottom: 20px; /* Add some space below the heading */
-    margin-top: 20px; /* Add some space above the heading */
-    align-self: flex-start;
-    margin-left: 20px;
+  .file-upload {
+    width: 100%;
+    max-width: 90%;
+  }
+
+  .mermaid-chart {
+    width: 100%;
+    max-width: 90%;
+    min-width: auto;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .file-upload,
+  .mermaid-chart {
+    max-width: 100%;
+  }
+
+  .upload-icon-container {
+    height: auto;
+    padding: 15px;
   }
 
   .mind-map-container {
-    width: calc(100% - 16px);
-    height: calc(100% - 16px); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    border: 1px solid #E5E7EB; /* Adjust border styling if needed */
-    box-sizing: border-box; /* Ensures padding and border are included in dimensions */
-    background-color: #ffffff; 
+    min-height: 300px;
   }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .file-upload {
+    min-height: 250px;
+  }
+
+  .upload-text {
+    font-size: 14px;
+  }
+
+  .mind-map-heading {
+    font-size: 18px;
+  }
+}
