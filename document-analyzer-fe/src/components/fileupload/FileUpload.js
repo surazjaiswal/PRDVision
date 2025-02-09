@@ -219,12 +219,10 @@ function FileUpload() {
         </div>
 
         {/* Zoom Controls */}
-        {!isSummaryView && (
-          <div className="zoom-controls">
+        <div className="zoom-controls">
             <button onClick={zoomIn} className="zoom-btn">+</button>
             <button onClick={zoomOut} className="zoom-btn">-</button>
           </div>
-        )}
       </div>
     </div>
   );
