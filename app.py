@@ -1,10 +1,24 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from routes.prd_summarizer import PRDSummarizer
+from routes.wireframe_generator import WireframeGenerator
 
 # Flask setup
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
+
+
+@app.route("/generate-wireframe", methods=["POST"])
+def generate_wireframe():
+    """ API endpoint that receives PRD text and returns structured UI JSON """
+    data = request.json
+    prd_text = data.get("text", "")
+
+    if not prd_text:
+        return jsonify({"error": "No text provided"}), 400
+
+    wireframe_data = WireframeGenerator(prd_text)
+    return jsonify({"wireframe": wireframe_data})
 
 
 @app.route('/analyze', methods=['POST'])
@@ -37,35 +51,36 @@ def analyze_text():
 
 def defaultResponse():
     summarized_text = """
-AI-Based Quiz System
-The AI-Based Quiz System is an intelligent platform designed to generate, evaluate, and analyze quizzes using artificial intelligence (AI). It supports multiple question formats, adaptive learning, real-time feedback, and performance analytics, catering to students, professionals, and organizations seeking interactive knowledge enhancement.
+    AI-Based Quiz System
+    The AI-Based Quiz System is an intelligent platform designed to generate, evaluate, and analyze quizzes using artificial intelligence (AI). It supports multiple question formats, adaptive learning, real-time feedback, and performance analytics, catering to students, professionals, and organizations seeking interactive knowledge enhancement.
 
-Key Features:
-✅ AI-Generated Quizzes – Supports MCQs, True/False, Fill in the Blanks, and Short Answers
-✅ Adaptive Learning – Adjusts difficulty based on user performance
-✅ Quiz Modes – Timer-based and untimed quizzes
-✅ Real-Time Feedback – Provides explanations and performance insights
-✅ Custom Quizzes – Instructors can manually create quizzes or generate them using AI
-✅ Performance Analytics – Tracks progress and suggests personalized improvement plans
+    Key Features:
+    ✅ AI-Generated Quizzes – Supports MCQs, True/False, Fill in the Blanks, and Short Answers
+    ✅ Adaptive Learning – Adjusts difficulty based on user performance
+    ✅ Quiz Modes – Timer-based and untimed quizzes
+    ✅ Real-Time Feedback – Provides explanations and performance insights
+    ✅ Custom Quizzes – Instructors can manually create quizzes or generate them using AI
+    ✅ Performance Analytics – Tracks progress and suggests personalized improvement plans
 
-Core UI Components:
-📌 Login/Register Screen – Secure authentication for users
-📌 Dashboard – Displays quiz history, recommendations, and user stats
-📌 Quiz Page – Interactive interface with questions, answer inputs, and timers
-📌 Results Page – Score breakdown, AI feedback, and improvement suggestions
+    Core UI Components:
+    📌 Login/Register Screen – Secure authentication for users
+    📌 Dashboard – Displays quiz history, recommendations, and user stats
+    📌 Quiz Page – Interactive interface with questions, answer inputs, and timers
+    📌 Results Page – Score breakdown, AI feedback, and improvement suggestions
 
-System Architecture:
-🔹 Backend: API-driven architecture using Node.js, Django, or Flask
-🔹 AI Integration: Powered by OpenAI & Hugging Face models
-🔹 Database: Supports PostgreSQL & MongoDB
-🔹 Frontend: Web (React.js/Next.js) & Mobile (Flutter/React Native)
+    System Architecture:
+    🔹 Backend: API-driven architecture using Node.js, Django, or Flask
+    🔹 AI Integration: Powered by OpenAI & Hugging Face models
+    🔹 Database: Supports PostgreSQL & MongoDB
+    🔹 Frontend: Web (React.js/Next.js) & Mobile (Flutter/React Native)
 
-Future Enhancements:
-🚀 AI-Powered Voice-Based Quizzes – Voice-activated quiz interactions
-🏆 Gamification Elements – Leaderboards, badges, and achievement rewards
-📚 LMS Integration – Seamless connection with learning management systems
+    Future Enhancements:
+    🚀 AI-Powered Voice-Based Quizzes – Voice-activated quiz interactions
+    🏆 Gamification Elements – Leaderboards, badges, and achievement rewards
+    📚 LMS Integration – Seamless connection with learning management systems
 
-Stay ahead with AI-driven learning & assessment! 🎯 """
+    Stay ahead with AI-driven learning & assessment! 🎯 """
+
     mermaid_code = """graph TD;
     subgraph Login/Register
         A[Login/Register Screen] --> B{Auth Success?}
@@ -131,6 +146,7 @@ Stay ahead with AI-driven learning & assessment! 🎯 """
     """
     user_flows = []
     ui_components = []
+    wireframes = getSampleWireframes()
 
 
     resJson = jsonify({
@@ -138,10 +154,61 @@ Stay ahead with AI-driven learning & assessment! 🎯 """
         "mermaid": mermaid_code,
         "userFlow": user_flows,
         "uiComponent": ui_components,
+        "wireframes": wireframes
     })
 
     return resJson
 
+def getSampleWireframes():
+    return {
+    "screens": [
+      {
+        "name": "Login Screen",
+        "components": [
+          { "type": "TextField", "label": "Username or Email" },
+          { "type": "TextField", "label": "Password" },
+          { "type": "Checkbox", "label": "Remember Me" },
+          { "type": "Button", "label": "Login" },
+          { "type": "Link", "label": "Forgot Password?" },
+          { "type": "Link", "label": "Sign Up" }
+        ]
+      },
+      {
+        "name": "Feed Screen",
+        "components": [
+          { "type": "Navbar", "items": ["Home", "Search", "Notifications", "Profile"] },
+          { "type": "Post", "author": "User1", "content": "This is a sample post", "media": "false" },
+          { "type": "Post", "author": "User2", "content": "Another post with an image", "media": "true" },
+          { "type": "Button", "label": "Create Post" }
+        ]
+      },
+      {
+        "name": "Media Screen",
+        "components": [
+          { "type": "Title", "text": "Media Gallery" },
+          { "type": "Grid", "items": [
+            { "type": "Image", "src": "image1.jpg" },
+            { "type": "Image", "src": "image2.jpg" },
+            { "type": "Video", "src": "video1.mp4" }
+          ] },
+          { "type": "Button", "label": "Upload Media" }
+        ]
+      },
+      {
+        "name": "Poll Screen",
+        "components": [
+          { "type": "Title", "text": "Create a Poll" },
+          { "type": "TextField", "label": "Poll Question" },
+          { "type": "TextField", "label": "Option 1" },
+          { "type": "TextField", "label": "Option 2" },
+          { "type": "TextField", "label": "Option 3" },
+          { "type": "Button", "label": "Submit Poll" },
+          { "type": "List", "items": ["Active Polls", "Past Polls"] }
+        ]
+      }
+    ]
+  }
+  
 
 
 @app.route("/")
