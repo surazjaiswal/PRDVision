@@ -115,7 +115,7 @@ class WireframeGenerator:
             else:
                 raise Exception("Failed to extract valid JSON from the response.")
         else:
-            raise Exception("Failed to summarize user flow with DeepSeek.")
+            raise Exception("Failed to get wireframe with DeepSeek.")
 
         return wireframe_components
 

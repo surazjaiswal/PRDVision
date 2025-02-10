@@ -4,7 +4,7 @@ import MermaidBgIcon from '../../assets/ic_mermaid_container_bg.png';
 import './FileUpload.css';
 import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
-import MermaidRenderer from '../mermaid/MermaidRenderer';
+import MermaidRenderer from './MermaidRenderer';
 import mammoth from 'mammoth';
 import WireframeRenderer from "../wireframe/Wireframe";
 import SummaryView from '../summary/SummaryView';

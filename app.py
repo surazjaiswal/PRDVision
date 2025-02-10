@@ -50,115 +50,115 @@ def analyze_text():
 
     return resJson
 
-def defaultResponse(text):
-    summarized_text = """
-    AI-Based Quiz System
-    The AI-Based Quiz System is an intelligent platform designed to generate, evaluate, and analyze quizzes using artificial intelligence (AI). It supports multiple question formats, adaptive learning, real-time feedback, and performance analytics, catering to students, professionals, and organizations seeking interactive knowledge enhancement.
+# def defaultResponse(text):
+#     summarized_text = """
+#     AI-Based Quiz System
+#     The AI-Based Quiz System is an intelligent platform designed to generate, evaluate, and analyze quizzes using artificial intelligence (AI). It supports multiple question formats, adaptive learning, real-time feedback, and performance analytics, catering to students, professionals, and organizations seeking interactive knowledge enhancement.
 
-    Key Features:
-    ✅ AI-Generated Quizzes – Supports MCQs, True/False, Fill in the Blanks, and Short Answers
-    ✅ Adaptive Learning – Adjusts difficulty based on user performance
-    ✅ Quiz Modes – Timer-based and untimed quizzes
-    ✅ Real-Time Feedback – Provides explanations and performance insights
-    ✅ Custom Quizzes – Instructors can manually create quizzes or generate them using AI
-    ✅ Performance Analytics – Tracks progress and suggests personalized improvement plans
+#     Key Features:
+#     ✅ AI-Generated Quizzes – Supports MCQs, True/False, Fill in the Blanks, and Short Answers
+#     ✅ Adaptive Learning – Adjusts difficulty based on user performance
+#     ✅ Quiz Modes – Timer-based and untimed quizzes
+#     ✅ Real-Time Feedback – Provides explanations and performance insights
+#     ✅ Custom Quizzes – Instructors can manually create quizzes or generate them using AI
+#     ✅ Performance Analytics – Tracks progress and suggests personalized improvement plans
 
-    Core UI Components:
-    📌 Login/Register Screen – Secure authentication for users
-    📌 Dashboard – Displays quiz history, recommendations, and user stats
-    📌 Quiz Page – Interactive interface with questions, answer inputs, and timers
-    📌 Results Page – Score breakdown, AI feedback, and improvement suggestions
+#     Core UI Components:
+#     📌 Login/Register Screen – Secure authentication for users
+#     📌 Dashboard – Displays quiz history, recommendations, and user stats
+#     📌 Quiz Page – Interactive interface with questions, answer inputs, and timers
+#     📌 Results Page – Score breakdown, AI feedback, and improvement suggestions
 
-    System Architecture:
-    🔹 Backend: API-driven architecture using Node.js, Django, or Flask
-    🔹 AI Integration: Powered by OpenAI & Hugging Face models
-    🔹 Database: Supports PostgreSQL & MongoDB
-    🔹 Frontend: Web (React.js/Next.js) & Mobile (Flutter/React Native)
+#     System Architecture:
+#     🔹 Backend: API-driven architecture using Node.js, Django, or Flask
+#     🔹 AI Integration: Powered by OpenAI & Hugging Face models
+#     🔹 Database: Supports PostgreSQL & MongoDB
+#     🔹 Frontend: Web (React.js/Next.js) & Mobile (Flutter/React Native)
 
-    Future Enhancements:
-    🚀 AI-Powered Voice-Based Quizzes – Voice-activated quiz interactions
-    🏆 Gamification Elements – Leaderboards, badges, and achievement rewards
-    📚 LMS Integration – Seamless connection with learning management systems
+#     Future Enhancements:
+#     🚀 AI-Powered Voice-Based Quizzes – Voice-activated quiz interactions
+#     🏆 Gamification Elements – Leaderboards, badges, and achievement rewards
+#     📚 LMS Integration – Seamless connection with learning management systems
 
-    Stay ahead with AI-driven learning & assessment! 🎯 """
+#     Stay ahead with AI-driven learning & assessment! 🎯 """
 
-    mermaid_code = """graph TD;
-    subgraph Login/Register
-        A[Login/Register Screen] --> B{Auth Success?}
-        B -- Yes --> C[Dashboard]
-        B -- No --> D[Error Message]
-        D --> E{Retry or Register?}
-        E --> F[Login/Register Screen]
-        E --> G[Dashboard]
-    end
+#     mermaid_code = """graph TD;
+#     subgraph Login/Register
+#         A[Login/Register Screen] --> B{Auth Success?}
+#         B -- Yes --> C[Dashboard]
+#         B -- No --> D[Error Message]
+#         D --> E{Retry or Register?}
+#         E --> F[Login/Register Screen]
+#         E --> G[Dashboard]
+#     end
     
-    subgraph Dashboard
-        H[View Past Quizzes] --> I[Quiz History Displayed]
-        J[See Recommendations] --> K[Recommended Quiz Displayed]
-        L[Initiate New Quiz] --> M[Quiz Page]
-    end
+#     subgraph Dashboard
+#         H[View Past Quizzes] --> I[Quiz History Displayed]
+#         J[See Recommendations] --> K[Recommended Quiz Displayed]
+#         L[Initiate New Quiz] --> M[Quiz Page]
+#     end
     
-    subgraph Quiz Page
-        N[Question View] --> O{Immediate Feedback?}
-        O -- Yes --> P[Next Question]
-        O -- No --> Q[End of Timer]
-        Q --> R[Results Page]
-    end
+#     subgraph Quiz Page
+#         N[Question View] --> O{Immediate Feedback?}
+#         O -- Yes --> P[Next Question]
+#         O -- No --> Q[End of Timer]
+#         Q --> R[Results Page]
+#     end
     
-    subgraph Results Page
-        S[Review Answers] --> T[AI Feedback]
-        U[Retake Quiz] --> M
-        V[Continue with Other Quizzes] --> C
-    end
+#     subgraph Results Page
+#         S[Review Answers] --> T[AI Feedback]
+#         U[Retake Quiz] --> M
+#         V[Continue with Other Quizzes] --> C
+#     end
     
-    subgraph Custom Quiz Creation
-        W[Instructor Accesses Tools] --> X{Manual or AI Assistance?}
-        X -- Manual --> Y[Create Questions and Answers]
-        X -- AI --> Z[AI Generates Content]
-        Y --> AA[Custom Quiz Available]
-        Z --> AA
-    end
+#     subgraph Custom Quiz Creation
+#         W[Instructor Accesses Tools] --> X{Manual or AI Assistance?}
+#         X -- Manual --> Y[Create Questions and Answers]
+#         X -- AI --> Z[AI Generates Content]
+#         Y --> AA[Custom Quiz Available]
+#         Z --> AA
+#     end
     
-    subgraph Performance Monitoring
-        BB[Instructor Views Analytics] --> CC[Detailed Reports]
-        DD[Personalized Improvement Plans] --> EE[Future Enhancements]
-    end
+#     subgraph Performance Monitoring
+#         BB[Instructor Views Analytics] --> CC[Detailed Reports]
+#         DD[Personalized Improvement Plans] --> EE[Future Enhancements]
+#     end
     
-    subgraph Future Enhancements
-        FF[AI-powered Voice Quizzes] --> GG[Gamification Elements]
-        HH[Integration with LMS] --> II[Expected in Future Versions]
-    end
+#     subgraph Future Enhancements
+#         FF[AI-powered Voice Quizzes] --> GG[Gamification Elements]
+#         HH[Integration with LMS] --> II[Expected in Future Versions]
+#     end
     
-    subgraph Technical Issues
-        JJ[System Error] --> KK[Retry or Manual Reset]
-        LL[Incorrect Answer Display] --> MM[Manual Correction]
-    end
+#     subgraph Technical Issues
+#         JJ[System Error] --> KK[Retry or Manual Reset]
+#         LL[Incorrect Answer Display] --> MM[Manual Correction]
+#     end
     
-    subgraph User Errors
-        NN[Mistyping Credentials] --> OO[Guidelines for Correct Path]
-        PP[Selecting Wrong Answers] --> QQ[Corrective Actions]
-        RR[Navigating Incorrectly] --> SS[UI Re-orientation]
-    end
+#     subgraph User Errors
+#         NN[Mistyping Credentials] --> OO[Guidelines for Correct Path]
+#         PP[Selecting Wrong Answers] --> QQ[Corrective Actions]
+#         RR[Navigating Incorrectly] --> SS[UI Re-orientation]
+#     end
     
-    subgraph Performance Anxiety
-        TT[Time Pressure] --> UU[Hints and Fast Options]
-        VV[Accuracy Focused] --> WW[No Jeopardy]
-    end
-    """
-    user_flows = []
-    ui_components = []
-    wireframes = getWireframes(text)
-    # wireframes = getSampleWireframes()
+#     subgraph Performance Anxiety
+#         TT[Time Pressure] --> UU[Hints and Fast Options]
+#         VV[Accuracy Focused] --> WW[No Jeopardy]
+#     end
+#     """
+#     user_flows = []
+#     ui_components = []
+#     wireframes = getWireframes(text)
+#     # wireframes = getSampleWireframes()
 
 
-    resJson = jsonify({
-        "summarizedText": summarized_text,
-        "mermaid": mermaid_code,
-        "userFlow": user_flows,
-        "wireframes": wireframes
-    })
+#     resJson = jsonify({
+#         "summarizedText": summarized_text,
+#         "mermaid": mermaid_code,
+#         "userFlow": user_flows,
+#         "wireframes": wireframes
+#     })
 
-    return resJson
+#     return resJson
 
 def getWireframes(text):
     generator = WireframeGenerator(text)
