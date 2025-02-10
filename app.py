@@ -24,12 +24,10 @@ def generate_wireframe():
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
 
-    
-
     data = request.get_json()
     text = data['text']
 
-    return defaultResponse(text)
+    # return defaultResponse(text)
     
     print("Received text for analysis:", text)  # Debugging
 
@@ -38,18 +36,19 @@ def analyze_text():
 
     print("Summarized Text:\n", result['summarized_text'])
     print("\nUser Flows:\n", result['user_flows'])
-    print("\nUI Components:\n", result['ui_components'])
     print("\nMermaid Diagram Code:\n", result['mermaid_code'])
-
+    
+    wireframes = getWireframes(text)
+    print("\n\n\nWireframes:", wireframes)
+    
     resJson = jsonify({
         "summarizedText": result['summarized_text'],
-        "mermaid": result['mermaid_code'],
+        "Flowchart": result['mermaid_code'],
         "userFlow": result['user_flows'],
-        "uiComponent": result['ui_components']
+        "wireframes": wireframes
     })
 
     return resJson
-
 
 def defaultResponse(text):
     summarized_text = """
@@ -148,15 +147,13 @@ def defaultResponse(text):
     """
     user_flows = []
     ui_components = []
-    # wireframes = getWireframes(text)
-    wireframes = getSampleWireframes()
-
+    wireframes = getWireframes(text)
+    # wireframes = getSampleWireframes()
 
     resJson = jsonify({
         "summarizedText": summarized_text,
         "mermaid": mermaid_code,
         "userFlow": user_flows,
-        "uiComponent": ui_components,
         "wireframes": wireframes
     })
 
@@ -217,9 +214,6 @@ def getSampleWireframes():
         }
     ]
 }
-
-  
-
 
 @app.route("/")
 def hello():

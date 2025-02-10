@@ -27,7 +27,7 @@ function FileUpload() {
 
   useEffect(() => {
     setIsSummaryView(selectedKey === 'summarizedText');
-    if (selectedKey !== "mermaid") {
+    if (selectedKey !== "Flowchart") {
       // Reset zoom when switching to other views
       if (zoomRef.current) {
         zoomRef.current.style.transform = "scale(1)";

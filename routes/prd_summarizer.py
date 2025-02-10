@@ -8,7 +8,6 @@ class PRDSummarizer:
         self.prd_text = prd_text
         self.summarized_text = ""
         self.user_flow_text = ""
-        self.user_flows = []
         self.ui_components = []
 
     def summarize_text(self):
@@ -62,9 +61,7 @@ class PRDSummarizer:
 
         if response.status_code == 200:
             user_flow_response = response.json().get("response", "")
-            # user_flow_start_index = user_flow_response.find('</think>') + len('</think>')
             self.user_flow_text = user_flow_response.strip()
-            # print("User flow:", self.user_flow_text)
         else:
             raise Exception("Failed to summarize user flow with DeepSeek.")
 
@@ -102,7 +99,7 @@ class PRDSummarizer:
         No comments should be included in the output.
         Return only the Mermaid.js code, without any additional explanation.
         User Flow to Convert:
-        {self.user_flow_text}
+        {self.prd_text}
         """
 
         payload = {
@@ -132,12 +129,12 @@ class PRDSummarizer:
         """Process the PRD text and return the summarized information."""
         self.summarize_text()
         self.extract_user_flows()
-        self.extract_ui_components()
+        # self.extract_ui_components()
         mermaid_code = self.generate_mermaid_code()
         
         return {
             "summarized_text": self.summarized_text,
-            "user_flows": self.user_flows,
-            "ui_components": self.ui_components,
+            "user_flows": self.user_flow_text,
+            # "ui_components": self.ui_components,
             "mermaid_code": mermaid_code
         }
