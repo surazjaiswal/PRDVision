@@ -6,6 +6,7 @@ import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
 import MermaidRenderer from '../mermaid/MermaidRenderer';
 import mammoth from 'mammoth';
+import WireframeRenderer from "../wireframe/Wireframe";
 
 // Set the pdf.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
@@ -14,6 +15,7 @@ function FileUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [mermaidChart, setMermaidChart] = useState('');
+  const [wireframeScreens, setWireframeScreens] = useState('');
   const [availableKeys, setAvailableKeys] = useState([]);
   const [selectedKey, setSelectedKey] = useState('');
   const [savedResponse, setSavedResponse] = useState(null);
@@ -25,6 +27,13 @@ function FileUpload() {
 
   useEffect(() => {
     setIsSummaryView(selectedKey === 'summarizedText');
+    if (selectedKey !== "mermaid") {
+      // Reset zoom when switching to other views
+      if (zoomRef.current) {
+        zoomRef.current.style.transform = "scale(1)";
+      }
+    }
+  
   }, [selectedKey]);
 
   const handleFileChange = async () => {
@@ -126,6 +135,7 @@ function FileUpload() {
       setAvailableKeys(Object.keys(resData));
       setSelectedKey(Object.keys(resData)[0]);
       setMermaidChart(Object.values(resData)[0]);
+      setWireframeScreens(Object.values(resData)[0]);
       setIsResponseReceived(true);
 
     } catch (error) {
@@ -142,7 +152,10 @@ function FileUpload() {
     if (newKey === 'summarizedText') {
       setIsSummaryView(true);
       setSummaryText(savedResponse["summarizedText"]);
-    } else {
+    } else if (newKey === 'wireframes') {
+      setIsSummaryView(false);
+      setWireframeScreens(savedResponse["wireframes"]);
+    }  else {
       setIsSummaryView(false);
       setMermaidChart(savedResponse[newKey]);
     }
@@ -162,45 +175,56 @@ function FileUpload() {
     }
   };
 
-  return (
-    <div className="container">
-      <div className="file-upload">
-        <div className="upload-icon-container">
-          <img src={UploadIcon} alt="UploadIcon" className="upload-icon" />
-          <p className="upload-text">Drop your PRD document here</p>
-          <p className="upload-text-message">or click to browse</p>
+return (
+  <div className="container">
+    <div className="file-upload">
+      <div className="upload-icon-container">
+        <img src={UploadIcon} alt="UploadIcon" className="upload-icon" />
+        <p className="upload-text">Drop your PRD document here</p>
+        <p className="upload-text-message">or click to browse</p>
 
-          <div className="upload-controls">
-            <label className="upload-button">
-              Choose File
-              <input type="file" accept=".pdf,.txt,.docx" hidden onChange={(e) => setSelectedFile(e.target.files[0])} />
-            </label>
+        <div className="upload-controls">
+          <label className="upload-button">
+            Choose File
+            <input type="file" accept=".pdf,.txt,.docx" hidden onChange={(e) => setSelectedFile(e.target.files[0])} />
+          </label>
 
-            <button className="generate-button" onClick={handleFileChange} disabled={!selectedFile}>
-              Generate
-            </button>
-          </div>
+          <button className="generate-button" onClick={handleFileChange} disabled={!selectedFile}>
+            Generate
+          </button>
         </div>
-
-        {selectedFile && <p className="file-name">{selectedFile.name}</p>}
-        {loading && <p className="loading-message">Processing document...</p>}
       </div>
 
-      <div className="mermaid-chart">
-        {!isResponseReceived ? (
-          <p className="default-message">Waiting for analysis...</p>
-        ) : (
-          <div className="dropdown-container">
-            <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
-              {availableKeys.map((key, index) => (
-                <option key={index} value={key}>{key}</option>
-              ))}
-            </select>
-          </div>
-        )}
+      {selectedFile && <p className="file-name">{selectedFile.name}</p>}
+      {loading && <p className="loading-message">Processing document...</p>}
+    </div>
 
-        <div className="mind-map-container">
-        {loading ? (
+    <div className="mermaid-chart">
+      {!isResponseReceived ? (
+        <p className="default-message">Waiting for analysis...</p>
+      ) : (
+        <div className="dropdown-container">
+          <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
+            {availableKeys.map((key, index) => (
+              <option key={index} value={key}>{key}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="mind-map-container">
+        {selectedKey === "wireframes" && wireframeScreens?.screens ? (
+          <div className="wireframe-container overflow-x">
+            {wireframeScreens.screens.map((screen, index) => (
+              <div key={index} style={{ border: "1px solid #ccc", padding: "8px", borderRadius: "5px" }}>
+                <h3>{screen.name}</h3>
+                <WireframeRenderer wireframeData={{ screens: [screen] }} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          // Default Mind Map / Summary View
+          loading ? (
             <div className="loader">Loading...</div>
           ) : isSummaryView ? (
             <div className="summary-view">
@@ -215,17 +239,21 @@ function FileUpload() {
                 <img src={MermaidBgIcon} alt="MermaidBgIcon" />
               )}
             </div>
-          )}
-        </div>
-
-        {/* Zoom Controls */}
-        <div className="zoom-controls">
-            <button onClick={zoomIn} className="zoom-btn">+</button>
-            <button onClick={zoomOut} className="zoom-btn">-</button>
-          </div>
+          )
+        )}
       </div>
+
+      {/* Zoom Controls - Only show when Mermaid chart is visible */}
+      {selectedKey !== "wireframes" && mermaidChart && (
+        <div className="zoom-controls">
+          <button onClick={zoomIn} className="zoom-btn">+</button>
+          <button onClick={zoomOut} className="zoom-btn">-</button>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
+
 }
 
 export default FileUpload;

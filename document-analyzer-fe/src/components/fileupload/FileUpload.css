@@ -173,6 +173,7 @@
   justify-content: center;
   transition: background-color 0.3s ease-in-out;
   overflow: scroll;
+  overflow-x: auto;
 }
 
 /* Background Effect for Empty MindMap */
@@ -238,7 +239,10 @@
 .zoom-btn:hover {
   background: #0056b3;
 }
-
+.wireframe-container{
+  display: flex;
+  gap: 16px;
+}
 
 /* 🔹 RESPONSIVE DESIGN */
 @media (max-width: 1024px) {
