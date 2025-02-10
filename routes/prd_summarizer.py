@@ -33,13 +33,13 @@ class PRDSummarizer:
             "stream": False
         }
         response = requests.post(OLLAMA_API_URL, json=payload)
-        print("summarize_text response:", response.json())
+        # print("summarize_text response:", response.json())
 
         if response.status_code == 200:
             summary_response = response.json().get("response", "")
             # summary_start_index = summary_response.find('</think>') + len('</think>')
             self.summarized_text = summary_response.strip()
-            print("Summarized Text:", self.summarized_text)
+            # print("Summarized Text:", self.summarized_text)
         else:
             raise Exception("Failed to summarize text with DeepSeek.")
 
@@ -58,13 +58,13 @@ class PRDSummarizer:
         }
 
         response = requests.post(OLLAMA_API_URL, json=payload)
-        print("extract_user_flows response:", response.json())
+        # print("extract_user_flows response:", response.json())
 
         if response.status_code == 200:
             user_flow_response = response.json().get("response", "")
             # user_flow_start_index = user_flow_response.find('</think>') + len('</think>')
             self.user_flow_text = user_flow_response.strip()
-            print("User flow:", self.user_flow_text)
+            # print("User flow:", self.user_flow_text)
         else:
             raise Exception("Failed to summarize user flow with DeepSeek.")
 
@@ -112,7 +112,7 @@ class PRDSummarizer:
         }
 
         response = requests.post(OLLAMA_API_URL, json=payload)
-        print("extract_user_flows response:", response.json())
+        # print("extract_user_flows response:", response.json())
 
         if response.status_code == 200:
             mermaid_prompt_response = response.json().get("response", "")
@@ -120,7 +120,7 @@ class PRDSummarizer:
             
             if match:
                 mermaid_code = match.group(1).strip()
-                print("Mermaid Code:", mermaid_code)
+                # print("Mermaid Code:", mermaid_code)
             else:
                 raise Exception("Mermaid.js code not found in response.")
         else:
@@ -132,9 +132,7 @@ class PRDSummarizer:
         """Process the PRD text and return the summarized information."""
         self.summarize_text()
         self.extract_user_flows()
-        # self.extract_ui_components()
-        
-        # Generate Mermaid code
+        self.extract_ui_components()
         mermaid_code = self.generate_mermaid_code()
         
         return {
