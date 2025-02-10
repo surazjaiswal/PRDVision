@@ -7,6 +7,8 @@ import * as pdfjsLib from 'pdfjs-dist';
 import MermaidRenderer from '../mermaid/MermaidRenderer';
 import mammoth from 'mammoth';
 import WireframeRenderer from "../wireframe/Wireframe";
+import SummaryView from '../summary/SummaryView';
+import Toolbar from '../toolbar/ToolbarContainer';
 
 // Set the pdf.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
@@ -212,6 +214,10 @@ return (
         </div>
       )}
 
+      {/* <div className="toolbar-element-container">
+        <Toolbar/>
+      </div> */}
+
       <div className="mind-map-container">
         {selectedKey === "wireframes" && wireframeScreens?.screens ? (
           <div className="wireframe-container overflow-x">
@@ -225,12 +231,9 @@ return (
         ) : (
           // Default Mind Map / Summary View
           loading ? (
-            <div className="loader">Loading...</div>
+            <div class="loader"></div>
           ) : isSummaryView ? (
-            <div className="summary-view">
-              <h3>Summarized Text</h3>
-              <p>{summaryText}</p>
-            </div>
+            <SummaryView summaryText={summaryText}/>
           ) : (
             <div className="mermaid-wrapper" ref={zoomRef}>
               {mermaidChart ? (

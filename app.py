@@ -150,6 +150,7 @@ def defaultResponse(text):
     wireframes = getWireframes(text)
     # wireframes = getSampleWireframes()
 
+
     resJson = jsonify({
         "summarizedText": summarized_text,
         "mermaid": mermaid_code,
