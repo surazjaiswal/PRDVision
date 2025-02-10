@@ -148,8 +148,8 @@ def defaultResponse(text):
     """
     user_flows = []
     ui_components = []
-    # wireframes = getWireframes(text)
-    wireframes = getSampleWireframes()
+    wireframes = getWireframes(text)
+    # wireframes = getSampleWireframes()
 
 
     resJson = jsonify({
