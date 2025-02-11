@@ -14,22 +14,29 @@ class WireframeGenerator:
         """ AI-based text processing & structured wireframe generation """
 
         prompt = f"""
-            You are an AI expert in product analysis, user experience design, and UI component identification. Given a Product Requirement Document (PRD), your task is to extract and map the complete user flow while identifying the required UI components.
+            You are an AI expert in product analysis, user experience design, and UI component identification. Given a Product Requirement Document (PRD) summary, extract a structured user journey while identifying necessary UI screens and components.
 
-            ### Task:
-            1. **User Flow Extraction**:
-            - Identify key steps, decision points, and interactions a user takes while engaging with the product.
-            - Structure the user flow in a step-by-step manner, including entry points, actions, transitions, and outcomes.
-            - Highlight alternative paths, edge cases, and dependencies where applicable.
+            Task Details:
+                1. User Flow Extraction:
+                    - Analyze the given PRD text to break down the user journey into clear sequential steps.
+                    - Identify all possible user actions, transitions, decision points, and alternative flows.
 
-            2. **UI Component Generation**:
-            - Infer required UI screens and components based on extracted user actions.
-            - Generate a structured representation of UI elements for each identified screen.
-            - If applicable, introduce sample UI components to accommodate different scenarios.
+                2. UI Component Mapping:
+                    - Infer the required UI screens based on extracted user actions.
+                    - Generate a structured representation of UI components for each identified screen.
+                    - Include essential UI elements such as text fields, buttons, modals, dropdowns, notifications, and other interactive components.
+                    - If applicable, introduce sample UI elements to accommodate different scenarios.
 
-            ### Output Format:
-            The output should be a structured JSON containing a list of screens, each with its relevant UI components. The structure should resemble the following:
+            Input Format (Example):
+            A user flow from a PRD detailing a mobile banking app process, including login, balance inquiry, fund transfer, and security handling.
 
+            Expected Output (JSON Format):
+            Generate a well-structured JSON output containing:
+                - Screens: A list of UI screens with relevant UI components.
+                - Components: Details of UI elements, including their type, labels, and properties.
+                - Alternative Paths: Handling of edge cases or alternative user flows.
+
+            Example Output:
             ```json
             {{
                 "screens": [
@@ -44,19 +51,45 @@ class WireframeGenerator:
                         ]
                     }},
                     {{
-                        "name": "Payment Screen",
+                        "name": "Dashboard",
                         "components": [
-                            {{"type": "ButtonGroup", "options": ["Bank", "Paypal", "Stripe", "Cash"]}},
-                            {{"type": "Button", "label": "Proceed", "style": "primary"}}
+                            {{"type": "Card", "label": "Account Balance", "value": "$5000"}},
+                            {{"type": "List", "label": "Recent Transactions", "items": ["Grocery - $50", "Netflix - $12"]}},
+                            {{"type": "Button", "label": "Transfer Money", "style": "primary"}}
                         ]
+                    }},
+                    {{
+                        "name": "Transfer Screen",
+                        "components": [
+                            {{"type": "TextField", "label": "Recipient", "placeholder": "Enter account number"}},
+                            {{"type": "TextField", "label": "Amount", "placeholder": "Enter amount"}},
+                            {{"type": "Button", "label": "Review Transfer", "style": "primary"}}
+                        ]
+                    }}
+                ],
+                "alternative_paths": [
+                    {{
+                        "name": "Forgot Password",
+                        "flow": "User clicks on 'Forgot Password' → Enters email → Receives reset link → Creates a new password."
+                    }},
+                    {{
+                        "name": "Network Error Handling",
+                        "flow": "If network is weak, user receives a retry prompt with alternative login options."
                     }}
                 ]
             }}
+            ```
+            Instructions for OpenAI:
+                1. Ensure the output is structured, detailed, and logically mapped to user actions.
+                2. Maintain a clear and readable format that directly aligns UI components with user flow steps.
+                3. Identify alternative paths and edge cases in the flow.
+                4. Focus on usability, clarity, and completeness in UI component generation.
 
-            {json.dumps(self.prd_text)} 
+
+            PRD summary for which wireframe components need to be extracted: {self.prd_text}
 
             """
-
+        
         payload = {
             "model": "deepseek-coder-v2",
             "prompt": prompt,
@@ -64,16 +97,21 @@ class WireframeGenerator:
         }
 
         response = requests.post(OLLAMA_API_URL, json=payload)
-        print("extract_user_flows response:", response.json())
+        print("\n\nAPI Response Status Code:", response.status_code)
+        print("\nAPI Response Content:", response.text)  # Print raw response for debugging
+        print("\nWireframe response:", response.json())
 
         if response.status_code == 200:
             response_text = response.json().get("response", "")
-            
+            print("Wireframe prompt resoonse:", response_text)
+
             # Extract JSON content from the response text
-            json_match = re.search(r'```json\n(.*?)\n```', response_text, re.DOTALL)
+            json_match = re.search(r'```json\s*(.*?)\s*```', response_text, re.DOTALL)
 
             if json_match:
-                wireframe_components = json.loads(json_match.group(1))  # Convert to a Python dictionary
+                json_str = json_match.group(1).strip()
+                wireframe_components = json.loads(json_str)
+                print("Wireframe components:", wireframe_components)
             else:
                 raise Exception("Failed to extract valid JSON from the response.")
         else:
@@ -81,52 +119,8 @@ class WireframeGenerator:
 
         return wireframe_components
 
-        # Sample wireframe template (adjustable for AI-generated structure)
-        TEMPLATE_UI_COMPONENTS = {
-            "login": [
-                {"type": "TextField", "label": "Email", "placeholder": "Enter email"},
-                {"type": "TextField", "label": "Password", "placeholder": "Enter password", "secure": True},
-                {"type": "Button", "label": "Sign In", "style": "primary"},
-                {"type": "Link", "label": "Forgot Password?", "action": "reset_password"},
-                {"type": "Button", "label": "Create Account", "style": "secondary"}
-            ],
-            "signup": [
-                {"type": "TextField", "label": "First Name", "placeholder": "Enter first name"},
-                {"type": "TextField", "label": "Last Name", "placeholder": "Enter last name"},
-                {"type": "TextField", "label": "Email", "placeholder": "Enter email"},
-                {"type": "TextField", "label": "Password", "placeholder": "Enter password", "secure": True},
-                {"type": "Button", "label": "Create Account", "style": "primary"}
-            ],
-            "payment": [
-                {"type": "ButtonGroup", "options": ["Bank", "Paypal", "Stripe", "Cash"]},
-                {"type": "Button", "label": "Proceed", "style": "primary"}
-            ],
-            "confirmation": [
-                {"type": "Text", "label": "Payment Successful"},
-                {"type": "Text", "label": "Paid: $950"},
-                {"type": "Button", "label": "Return to Home", "style": "primary"}
-            ]
-        }
-
-        # Simulated AI decision-making: infer screens based on keywords
-        screens = []
-        if "login" in self.prd_text.lower():
-            screens.append({"name": "Login Screen", "components": TEMPLATE_UI_COMPONENTS["login"]})
-        if "signup" in self.prd_text.lower() or "register" in self.prd_text.lower():
-            screens.append({"name": "Signup Screen", "components": TEMPLATE_UI_COMPONENTS["signup"]})
-        if "payment" in self.prd_text.lower() or "checkout" in self.prd_text.lower():
-            screens.append({"name": "Payment Screen", "components": TEMPLATE_UI_COMPONENTS["payment"]})
-        if "confirmation" in self.prd_text.lower() or "success" in self.prd_text.lower():
-            screens.append({"name": "Confirmation Screen", "components": TEMPLATE_UI_COMPONENTS["confirmation"]})
-
-        return {"screens": screens}
-    
-
     def process(self):
         """Process the PRD text and return the summarized information."""
         self.wireframe_components = self.getWireframeComponents()
-        
-        return {
-            "wireframes": self.wireframe_components
-        }
+        return self.wireframe_components
 

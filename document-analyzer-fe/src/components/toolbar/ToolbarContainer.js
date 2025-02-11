@@ -5,8 +5,8 @@ import './ToolbarContainer.css'
 const Toolbar = () => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Hierarchical");
-    const options = ["Hierarchical", "Grid", "List"];
+    const [selectedOption, setSelectedOption] = useState("Flowchart");
+    const options = ["Flowchart", "User Flow", "Summary", "Wireframe"];
 
 
   return (

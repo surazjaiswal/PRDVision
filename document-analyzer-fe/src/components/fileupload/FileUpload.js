@@ -29,7 +29,7 @@ function FileUpload() {
 
   useEffect(() => {
     setIsSummaryView(selectedKey === 'summarizedText');
-    if (selectedKey !== "mermaid") {
+    if (selectedKey !== "Flowchart") {
       // Reset zoom when switching to other views
       if (zoomRef.current) {
         zoomRef.current.style.transform = "scale(1)";
@@ -203,7 +203,7 @@ return (
 
     <div className="mermaid-chart">
       {!isResponseReceived ? (
-        <p className="default-message">Waiting for analysis...</p>
+        <p className="default-message" hidden>Waiting for analysis...</p>
       ) : (
         <div className="dropdown-container">
           <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
@@ -214,9 +214,9 @@ return (
         </div>
       )}
 
-      {/* <div className="toolbar-element-container">
+      <div className="toolbar-element-container">
         <Toolbar/>
-      </div> */}
+      </div>
 
       <div className="mind-map-container">
         {selectedKey === "wireframes" && wireframeScreens?.screens ? (
