@@ -4,7 +4,7 @@ import MermaidBgIcon from '../../assets/ic_mermaid_container_bg.png';
 import './FileUpload.css';
 import axios from 'axios';
 import * as pdfjsLib from 'pdfjs-dist';
-import MermaidRenderer from '../mermaid/MermaidRenderer';
+import MermaidRenderer from './MermaidRenderer';
 import mammoth from 'mammoth';
 import WireframeRenderer from "../wireframe/Wireframe";
 import SummaryView from '../summary/SummaryView';
@@ -203,7 +203,7 @@ return (
 
     <div className="mermaid-chart">
       {!isResponseReceived ? (
-        <p className="default-message" hidden>Waiting for analysis...</p>
+        <p className="default-message" >Waiting for analysis...</p>
       ) : (
         <div className="dropdown-container">
           <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
@@ -214,9 +214,9 @@ return (
         </div>
       )}
 
-      <div className="toolbar-element-container">
+      {/* <div className="toolbar-element-container">
         <Toolbar/>
-      </div>
+      </div> */}
 
       <div className="mind-map-container">
         {selectedKey === "wireframes" && wireframeScreens?.screens ? (

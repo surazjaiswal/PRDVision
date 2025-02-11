@@ -287,6 +287,8 @@
   background: #0056b3;
 }
 .wireframe-container{
+  padding: 12px;
+  overflow-x: auto;
   display: flex;
   gap: 16px;
 }

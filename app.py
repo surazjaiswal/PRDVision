@@ -7,27 +7,13 @@ from routes.wireframe_generator import WireframeGenerator
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
 
-
-@app.route("/generate-wireframe", methods=["POST"])
-def generate_wireframe():
-    """ API endpoint that receives PRD text and returns structured UI JSON """
-    data = request.json
-    prd_text = data.get("text", "")
-
-    if not prd_text:
-        return jsonify({"error": "No text provided"}), 400
-
-    wireframe_data = WireframeGenerator(prd_text)
-    return jsonify({"wireframe": wireframe_data})
-
-
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
 
     data = request.get_json()
     text = data['text']
 
-    # return defaultResponse(text)
+    return defaultResponse(text)
     
     print("Received text for analysis:", text)  # Debugging
 
@@ -147,8 +133,9 @@ def defaultResponse(text):
     """
     user_flows = []
     ui_components = []
-    wireframes = getWireframes(text)
-    # wireframes = getSampleWireframes()
+    # wireframes = getWireframes(text)
+    wireframes = getSampleWireframes()
+
 
     resJson = jsonify({
         "summarizedText": summarized_text,
@@ -163,7 +150,6 @@ def getWireframes(text):
     generator = WireframeGenerator(text)
     result = generator.process()
     return result
-    
 
 def getSampleWireframes():
     return {
@@ -171,46 +157,56 @@ def getSampleWireframes():
         {
             "name": "Login/Register Screen",
             "components": [
-                {"type": "TextField", "label": "Email", "placeholder": "Enter email"},
-                {"type": "TextField", "label": "Password", "placeholder": "Enter password", "secure": True},
-                {"type": "Button", "label": "Sign In", "style": "primary"},
-                {"type": "Button", "label": "Register", "style": "secondary"}
+                {"type": "TextField", "label": "Email Address", "placeholder": "Enter your email"},
+                {"type": "Button", "label": "Submit", "action": "validateInput"}
             ]
         },
         {
             "name": "Dashboard",
             "components": [
-                {"type": "Card", "title": "Quiz History", "description": "View past quizzes"},
-                {"type": "Card", "title": "Recommendations", "description": "AI suggested quizzes"},
-                {"type": "Card", "title": "Stats", "description": "Performance analytics"}
+                {"type": "HeaderText", "label": "Quiz History"},
+                {"type": "List", "label": "Completed Quizzes"},
+                {"type": "Card", "label": "Performance Analytics"},
+                {"type": "PieChart", "label": "Topic Strengths"}
             ]
         },
         {
             "name": "Quiz Page",
             "components": [
-                {"type": "QuestionDisplay", "questionType": "MCQs", "options": ["Option A", "Option B", "Option C", "Option D"]},
-                {"type": "Timer", "duration": 300},
-                {"type": "AnswerInput", "placeholder": "Enter answer"}
+                {"type": "List", "label": "Questions", "count": 5},
+                {"type": "TextField", "label": "Answer Question"},
+                {"type": "Button", "label": "Next Question", "action": "nextQuestion"}
             ]
         },
         {
             "name": "Results Page",
             "components": [
-                {"type": "ScoreDisplay", "score": "8/10"},
-                {"type": "Feedback", "feedback": "Good job, some answers need more explanation."},
-                {"type": "AnswersList", "answers": ["Correct", "Incorrect"]}
+                {"type": "HeaderText", "label": "Quiz Summary"},
+                {"type": "Table", "headers": ["Question", "Answer", "Feedback"]},
+                {"type": "Button", "label": "Generate Report", "action": "generateReport"}
             ]
         },
         {
             "name": "Admin Panel",
             "components": [
-                {"type": "Table", "title": "Manage Users", "columns": ["Username", "Email"], "actions": ["Edit", "Delete"]},
-                {"type": "Table", "title": "Manage Quizzes", "columns": ["Quiz Name", "Topic"], "actions": ["View Results", "Delete"]},
-                {"type": "SettingsForm", "fields": [
-                    {"label": "Theme", "options": ["Light", "Dark"]},
-                    {"label": "Language", "options": ["English", "Spanish"]}
-                ]}
+                {"type": "Navbar", "items": ["Manage Users", "Create Quiz", "View Analytics"]},
+                {"type": "Card", "label": "User Management"},
+                {"type": "Card", "label": "Quiz Statistics"}
             ]
+        },
+        {
+            "name": "Management Dashboard",
+            "components": [
+                {"type": "Navbar", "items": ["Dashboard", "Quizzes", "Users"]},
+                {"type": "Card", "label": "Active Users"},
+                {"type": "Card", "label": "New Quizzes"}
+            ]
+        }
+    ],
+    "alternative_paths": [
+        {
+            "name": "Error Handling",
+            "flow": "User sees error message if input is invalid"
         }
     ]
 }
