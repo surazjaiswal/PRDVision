@@ -7,6 +7,7 @@
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
     "jsmind": "^0.8.6",
+    "konva": "^9.3.18",
     "lucide-react": "^0.475.0",
     "mammoth": "^1.9.0",
     "mermaid": "^11.4.1",
@@ -14,7 +15,7 @@
     "pdfjs-dist": "2.10.377",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-konva": "^19.0.2",
+    "react-konva": "^18.2.10",
     "react-router-dom": "^7.1.5",
     "react-scripts": "5.0.1",
     "web-vitals": "^4.2.4"
