@@ -147,8 +147,7 @@ function FileUpload() {
     }
   };
 
-  const handleKeySelection = (event) => {
-    const newKey = event.target.value;
+  const handleKeySelection = (newKey) => {
     setSelectedKey(newKey);
 
     if (newKey === 'summarizedText') {
@@ -205,18 +204,10 @@ return (
       {!isResponseReceived ? (
         <p className="default-message">Waiting for analysis...</p>
       ) : (
-        <div className="dropdown-container">
-          <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
-            {availableKeys.map((key, index) => (
-              <option key={index} value={key}>{key}</option>
-            ))}
-          </select>
+        <div className="toolbar-element-container">
+          <Toolbar onSelectOption={handleKeySelection} availableKeys={availableKeys} />
         </div>
       )}
-
-      {/* <div className="toolbar-element-container">
-        <Toolbar/>
-      </div> */}
 
       <div className="mind-map-container">
         {selectedKey === "wireframes" && wireframeScreens?.screens ? (

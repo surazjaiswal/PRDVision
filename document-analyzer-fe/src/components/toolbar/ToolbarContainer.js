@@ -2,12 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Plus, Minus, Share2, Download, ChevronDown } from "lucide-react";
 import './ToolbarContainer.css'
 
-const Toolbar = () => {
+const Toolbar = ({ onSelectOption, availableKeys }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(availableKeys[0]);
 
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Hierarchical");
-    const options = ["Hierarchical", "Grid", "List"];
-
+  const handleOptionSelect = (option) => {
+    setSelectedOption(option);
+    setIsDropdownOpen(false);
+    onSelectOption(option); 
+  };
 
   return (
     <div className="toolbar-container">
@@ -23,10 +26,10 @@ const Toolbar = () => {
             </button>
             {isDropdownOpen && (
             <ul className="dropdown-menu">
-                {options.map((option) => (
-                <li key={option} className="dropdown-item" onClick={() => { setSelectedOption(option); setIsDropdownOpen(false); }}>
-                    {option}
-                </li>
+                {availableKeys.map((key) => (
+                  <li key={key} className="dropdown-item" onClick={() => handleOptionSelect(key)}>
+                    {key}
+                  </li>
                 ))}
             </ul>
             )}
