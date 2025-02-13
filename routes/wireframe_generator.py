@@ -3,12 +3,12 @@ import requests
 import re
 import json
 
-OLLAMA_API_URL = "http://127.0.0.1:11434/api/generate"
-
 class WireframeGenerator:
-    def __init__(self, prd_text):
+    def __init__(self, api_key, prd_text):
         self.prd_text = prd_text
         self.wireframe_components = []
+        self.api_key = api_key
+        self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
     def getWireframeComponents(self):
         """ AI-based text processing & structured wireframe generation """
@@ -64,79 +64,54 @@ class WireframeGenerator:
 
         Generate only raw JSON output without any commentary.
         """
-        
+
         payload = {
-            "model": "deepseek-r1",
-            "prompt": prompt,
-            "stream": False
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
         }
 
-        response = requests.post(OLLAMA_API_URL, json=payload)
+        response = requests.post(
+            f"{self.api_url}?key={self.api_key}",
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        
         print("\n\nAPI Response Status Code:", response.status_code)
-        print("\nAPI Response Content:", response.text)  # Print raw response for debugging
+        print("\nAPI Response Content:", response.text)
         print("\nWireframe response:", response.json())
 
         if response.status_code == 200:
-            response_text = response.json().get("response", "")
-            print("Wireframe prompt resoonse:", response_text)
-
-            # Extract JSON content from the response text
-            json_match = re.search(r'```json\s*(.*?)\s*```', response_text, re.DOTALL)
-
-            if json_match:
-                json_str = json_match.group(1).strip()
+            candidates = response.json().get("candidates", [])
+            if candidates:
+                response_text = candidates[0]["content"]["parts"][0]["text"]
+                print("Wireframe prompt response:", response_text)
                 
-                # Validate JSON through API
-                wireframe_components = self.validateJsonResponse(json_str)
-                print("Final Wireframe components:", wireframe_components)
+                try:
+                    wireframe_components = self.validateJsonResponse(response_text)
+                    print("Final Wireframe components:", wireframe_components)
+                except Exception as e:
+                    raise Exception("Failed to extract valid JSON from the response.") from e
             else:
-                raise Exception("Failed to extract valid JSON from the response.")
+                raise Exception("No candidates found in response.")
         else:
-            raise Exception("Failed to get wireframe with DeepSeek.")
+            raise Exception("Failed to get wireframe with Gemini API.")
+
 
         return wireframe_components
-
-    def validateJsonResponse(self, invalid_json_str):
-        """Validate and correct JSON structure through AI processing"""
-        correction_prompt = f"""
-        You are a JSON syntax expert. Fix the following JSON ensuring:
-        1. Strict double quotes for all strings
-        2. Proper escaping of special characters
-        3. No trailing commas in arrays/objects
-        4. Valid nesting of brackets/braces
-        5. All keys quoted properly
-        
-        Return ONLY valid JSON without any additional text.
-        
-        Invalid JSON:
-        {invalid_json_str}
-        """
-        
-        payload = {
-            "model": "deepseek-r1",
-            "prompt": correction_prompt,
-            "stream": False
-        }
-
+    
+    def validateJsonResponse(self, json_str):
         try:
-            response = requests.post(OLLAMA_API_URL, json=payload)
-            response.raise_for_status()
-            corrected_text = response.json().get("response", "")
-            
-            # Extract JSON from potential code block
-            json_match = re.search(r'```json\s*(.*?)\s*```', corrected_text, re.DOTALL)
-            if json_match:
-                corrected_json = json_match.group(1).strip()
-            else:
-                corrected_json = corrected_text.strip()
-
-            # Final validation
-            return json.loads(corrected_json)
-            
-        except requests.exceptions.RequestException as e:
-            raise Exception(f"API request failed: {str(e)}")
+            import json
+            return json.loads(json_str)
         except json.JSONDecodeError as e:
-            raise Exception(f"Failed to validate JSON: {str(e)}\nLast response: {corrected_text}")
+            raise Exception("Invalid JSON format.") from e
 
     def process(self):
         """Process the PRD text and return the summarized information."""
