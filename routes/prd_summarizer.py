@@ -1,14 +1,14 @@
 import requests
 import re
 
-OLLAMA_API_URL = "http://127.0.0.1:11434/api/generate"
-
 class PRDSummarizer:
-    def __init__(self, prd_text):
+    def __init__(self, api_key, prd_text):
         self.prd_text = prd_text
         self.summarized_text = ""
         self.user_flow_text = ""
         self.ui_components = []
+        self.api_key = api_key
+        self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
     def summarize_text(self):
         prompt = f"""
@@ -27,20 +27,31 @@ class PRDSummarizer:
         """
         
         payload = {
-            "model": "deepseek-coder-v2",
-            "prompt": prompt,
-            "stream": False
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
         }
-        response = requests.post(OLLAMA_API_URL, json=payload)
-        # print("summarize_text response:", response.json())
+
+        response = requests.post(
+            f"{self.api_url}?key={self.api_key}",
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+
+        print("\n\nSummarize text response - ", response.json())
 
         if response.status_code == 200:
-            summary_response = response.json().get("response", "")
-            # summary_start_index = summary_response.find('</think>') + len('</think>')
+            candidates = response.json().get("candidates", [])
+            summary_response = candidates[0]["content"]["parts"][0]["text"]
             self.summarized_text = summary_response.strip()
-            # print("Summarized Text:", self.summarized_text)
         else:
-            raise Exception("Failed to summarize text with DeepSeek.")
+            raise Exception("Failed to summarize text")
 
     def extract_user_flows(self):
         prompt = f"""
@@ -51,37 +62,30 @@ class PRDSummarizer:
         """
 
         payload = {
-            "model": "deepseek-coder-v2",
-            "prompt": prompt,
-            "stream": False
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
         }
 
-        response = requests.post(OLLAMA_API_URL, json=payload)
-        # print("extract_user_flows response:", response.json())
+        response = requests.post(
+            f"{self.api_url}?key={self.api_key}",
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        print("\n\nUser flow response - ", response.json())
 
         if response.status_code == 200:
-            user_flow_response = response.json().get("response", "")
+            candidates = response.json().get("candidates", [])
+            user_flow_response = candidates[0]["content"]["parts"][0]["text"]
             self.user_flow_text = user_flow_response.strip()
         else:
-            raise Exception("Failed to summarize user flow with DeepSeek.")
-
-    def extract_ui_components(self):
-        prompt = f"""
-        You are an AI expert in product analysis and user experience design. Given a Product Requirement Document (PRD), your task is to extract and map the complete user flow. Identify key steps, decision points, and interactions a user takes while engaging with the product. Structure the user flow in a clear, step-by-step manner, including entry points, actions, transitions, and outcomes. If applicable, highlight alternative paths, edge cases, and dependencies. Present the result in an easy-to-understand format, such as a flowchart-style list or structured diagram description.
-
-        PRD Text to for User Flow Extraction:
-        {self.prd_text}
-        """
-        """Extract UI components needed for the user flows."""
-        # Assuming UI components are mentioned in the summarized text
-        ui_keywords = ["button", "input", "dropdown", "text field", "checkbox", "slider", "modal"]
-        ui_components = []
-
-        for keyword in ui_keywords:
-            if keyword in self.summarized_text.lower():
-                ui_components.append(keyword)
-
-        self.ui_components = ui_components
+            raise Exception("Failed to summarize user flow.")
 
     def generate_mermaid_code(self):
         """Generate Mermaid code based on the user flows."""
@@ -103,38 +107,49 @@ class PRDSummarizer:
         """
 
         payload = {
-            "model": "deepseek-coder-v2",
-            "prompt": prompt,
-            "stream": False
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": prompt
+                        }
+                    ]
+                }
+            ]
         }
 
-        response = requests.post(OLLAMA_API_URL, json=payload)
-        # print("extract_user_flows response:", response.json())
+        response = requests.post(
+            f"{self.api_url}?key={self.api_key}",
+            json=payload,
+            headers={"Content-Type": "application/json"}
+        )
+        print("\n\nMermaid response - ", response.json())
 
         if response.status_code == 200:
-            mermaid_prompt_response = response.json().get("response", "")
-            match = re.search(r"```mermaid\n(.*?)\n```", mermaid_prompt_response, re.DOTALL)
-            
+            candidates = response.json().get("candidates", [])
+            mermaid_code = candidates[0]["content"]["parts"][0]["text"]
+            # Extracting the graph definition using regex
+            match = re.search(r"```mermaid\n(.*?)\n```", mermaid_code, re.DOTALL)
             if match:
-                mermaid_code = match.group(1).strip()
-                # print("Mermaid Code:", mermaid_code)
+                mermaid_graph = match.group(1)
+                print(mermaid_graph)
             else:
-                raise Exception("Mermaid.js code not found in response.")
+                print("No Mermaid graph found.")
+
+            print("\n\nMermaid graph:", mermaid_graph)
         else:
-            raise Exception("Failed to summarize user flow with DeepSeek.")
+            raise Exception("Failed to get mermaid code.")
         
-        return mermaid_code
+        return mermaid_graph
 
     def process(self):
         """Process the PRD text and return the summarized information."""
         self.summarize_text()
         self.extract_user_flows()
-        # self.extract_ui_components()
         mermaid_code = self.generate_mermaid_code()
         
         return {
             "summarized_text": self.summarized_text,
             "user_flows": self.user_flow_text,
-            # "ui_components": self.ui_components,
             "mermaid_code": mermaid_code
         }

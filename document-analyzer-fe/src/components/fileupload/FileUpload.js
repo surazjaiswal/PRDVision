@@ -25,7 +25,14 @@ function FileUpload() {
   const [isSummaryView, setIsSummaryView] = useState(false);
   const [isResponseReceived, setIsResponseReceived] = useState(false);
   const zoomRef = useRef(null);
+  const [zoomPercentage, setZoomPercentage] = useState(100);
   const zoomLevel = useRef(1);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [showZoomControls, setZoomControls] = useState(true);
 
   useEffect(() => {
     setIsSummaryView(selectedKey === 'summarizedText');
@@ -147,13 +154,14 @@ function FileUpload() {
     }
   };
 
-  const handleKeySelection = (event) => {
-    const newKey = event.target.value;
+  const handleKeySelection = (newKey) => {
     setSelectedKey(newKey);
-
+    setZoomPercentage(100); // Reset zoom percentage when switching views  
+    setZoomControls(true);
     if (newKey === 'summarizedText') {
       setIsSummaryView(true);
       setSummaryText(savedResponse["summarizedText"]);
+      setZoomControls(false);
     } else if (newKey === 'wireframes') {
       setIsSummaryView(false);
       setWireframeScreens(savedResponse["wireframes"]);
@@ -164,18 +172,83 @@ function FileUpload() {
   };
 
   const zoomIn = () => {
-    if (zoomRef.current) {
-      zoomLevel.current += 0.2;
+    if (zoomRef.current && zoomPercentage < 200) {
+      zoomLevel.current = Math.min(zoomLevel.current + 0.2, 2);
       zoomRef.current.style.transform = `scale(${zoomLevel.current})`;
+      setZoomPercentage(Math.min(200, zoomPercentage + 20));
+      centerContent();
     }
   };
 
   const zoomOut = () => {
-    if (zoomRef.current) {
-      zoomLevel.current = Math.max(0.5, zoomLevel.current - 0.2);
+    if (zoomRef.current && zoomPercentage > 40) {
+      zoomLevel.current = Math.max(zoomLevel.current - 0.2, 0.4);
       zoomRef.current.style.transform = `scale(${zoomLevel.current})`;
+      setZoomPercentage(Math.max(40, zoomPercentage - 20));
+      centerContent();
     }
   };
+
+  const centerContent = () => {
+    if (zoomRef.current) {
+      const element = zoomRef.current;
+      const contentWidth = element.scrollWidth;
+      const contentHeight = element.scrollHeight;
+      const containerWidth = element.offsetWidth;
+      const containerHeight = element.offsetHeight;
+
+      element.scrollLeft = (contentWidth - containerWidth) / 2;
+      element.scrollTop = (contentHeight - containerHeight) / 2;
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return; // Only allow left-click dragging
+
+    setIsDragging(true);
+    setStartX(e.pageX);
+    setStartY(e.pageY);
+    setScrollLeft(zoomRef.current.scrollLeft);
+    setScrollTop(zoomRef.current.scrollTop);
+    
+    zoomRef.current.style.cursor = "grabbing";
+    e.preventDefault(); // Prevent text selection while dragging
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+
+    requestAnimationFrame(() => {
+      const dx = e.pageX - startX;
+      const dy = e.pageY - startY;
+      
+      zoomRef.current.scrollLeft = scrollLeft - dx;
+      zoomRef.current.scrollTop = scrollTop - dy;
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    zoomRef.current.style.cursor = "grab";
+  };
+
+  // Add event listeners for mouse movement
+  useEffect(() => {
+    setIsSummaryView(selectedKey === 'summarizedText');
+    if (selectedKey !== "Flowchart") {
+      // Reset zoom when switching to other views
+      if (zoomRef.current) {
+        zoomRef.current.style.transform = "scale(1)";
+        setZoomPercentage(100); // Reset zoom percentage as well
+        zoomLevel.current = 1;    // Reset zoom level to 1
+      }
+    }
+
+    if (zoomRef.current) {
+        centerContent();
+    }
+  
+  }, [selectedKey, mermaidChart]);
 
 return (
   <div className="container">
@@ -205,18 +278,17 @@ return (
       {!isResponseReceived ? (
         <p className="default-message" >Waiting for analysis...</p>
       ) : (
-        <div className="dropdown-container">
-          <select id="keySelector" value={selectedKey} onChange={handleKeySelection} className="custom-dropdown">
-            {availableKeys.map((key, index) => (
-              <option key={index} value={key}>{key}</option>
-            ))}
-          </select>
+        <div className="toolbar-element-container">
+          <Toolbar 
+            onSelectOption={handleKeySelection} 
+            availableKeys={availableKeys} 
+            zoomIn={zoomIn}
+            zoomOut={zoomOut}
+            zoomPercentage={zoomPercentage} 
+            showZoomControls={showZoomControls}
+          />
         </div>
       )}
-
-      {/* <div className="toolbar-element-container">
-        <Toolbar/>
-      </div> */}
 
       <div className="mind-map-container">
         {selectedKey === "wireframes" && wireframeScreens?.screens ? (
@@ -235,7 +307,14 @@ return (
           ) : isSummaryView ? (
             <SummaryView summaryText={summaryText}/>
           ) : (
-            <div className="mermaid-wrapper" ref={zoomRef}>
+            <div 
+              className="mermaid-wrapper" 
+              ref={zoomRef}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
               {mermaidChart ? (
                 <MermaidRenderer chartDefinition={mermaidChart} />
               ) : (
@@ -246,13 +325,6 @@ return (
         )}
       </div>
 
-      {/* Zoom Controls - Only show when Mermaid chart is visible */}
-      {selectedKey !== "wireframes" && mermaidChart && (
-        <div className="zoom-controls">
-          <button onClick={zoomIn} className="zoom-btn">+</button>
-          <button onClick={zoomOut} className="zoom-btn">-</button>
-        </div>
-      )}
     </div>
   </div>
 );

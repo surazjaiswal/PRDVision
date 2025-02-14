@@ -7,9 +7,10 @@ from routes.wireframe_generator import WireframeGenerator
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
 
+GEMINI_API_KEY = "AIzaSyCA390S2PrSWRV5RDgCz4mEAmUkh-y4DTI"
+
 @app.route('/analyze', methods=['POST'])
 def analyze_text():
-
     data = request.get_json()
     text = data['text']
 
@@ -17,12 +18,8 @@ def analyze_text():
     
     print("Received text for analysis:", text)  # Debugging
 
-    prd_summarizer = PRDSummarizer(text)
+    prd_summarizer = PRDSummarizer(api_key=GEMINI_API_KEY, prd_text=text)
     result = prd_summarizer.process()
-
-    print("Summarized Text:\n", result['summarized_text'])
-    print("\nUser Flows:\n", result['user_flows'])
-    print("\nMermaid Diagram Code:\n", result['mermaid_code'])
     
     wireframes = getWireframes(text)
     print("\n\n\nWireframes:", wireframes)
@@ -30,7 +27,6 @@ def analyze_text():
     resJson = jsonify({
         "summarizedText": result['summarized_text'],
         "Flowchart": result['mermaid_code'],
-        "userFlow": result['user_flows'],
         "wireframes": wireframes
     })
 
@@ -147,7 +143,7 @@ def defaultResponse(text):
     return resJson
 
 def getWireframes(text):
-    generator = WireframeGenerator(text)
+    generator = WireframeGenerator(GEMINI_API_KEY, text)
     result = generator.process()
     return result
 
