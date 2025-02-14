@@ -128,10 +128,19 @@ class PRDSummarizer:
         if response.status_code == 200:
             candidates = response.json().get("candidates", [])
             mermaid_code = candidates[0]["content"]["parts"][0]["text"]
+            # Extracting the graph definition using regex
+            match = re.search(r"```mermaid\n(.*?)\n```", mermaid_code, re.DOTALL)
+            if match:
+                mermaid_graph = match.group(1)
+                print(mermaid_graph)
+            else:
+                print("No Mermaid graph found.")
+
+            print("\n\nMermaid graph:", mermaid_graph)
         else:
             raise Exception("Failed to get mermaid code.")
         
-        return mermaid_code
+        return mermaid_graph
 
     def process(self):
         """Process the PRD text and return the summarized information."""
