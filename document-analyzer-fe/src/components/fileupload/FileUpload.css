@@ -15,7 +15,6 @@
   flex: 1;
   min-width: 300px; /* Ensures it doesn’t get too small */
   max-width: 400px; /* Keeps upload area readable */
-  height: 320px;
   border-radius: 12px;
   background-color: #ffffff;
   display: flex;
@@ -132,12 +131,11 @@
   width: 100%;
 }
 
-
 /* Mind Map Section */
 .mermaid-chart {
   flex: 2;
-  min-width: 500px; /* Ensures proper width */
-  height: auto;
+  width: 500px; /* Ensures proper width */
+  height: 100%;
   border-radius: 12px;
   background-color: #F9FAFB;
   display: flex;
@@ -167,7 +165,7 @@
 /* Mind Map Container */
 .mind-map-container {
   width: 100%;
-  min-height: 400px;
+  height: 500px;
   border-radius: 12px;
   border: 1px solid #E5E7EB;
   box-sizing: border-box;
@@ -304,26 +302,25 @@
   }
 
   .mermaid-chart {
-    width: 100%;
+    width: 90%;
     max-width: 90%;
     min-width: auto;
     padding: 15px;
   }
+
+  .mind-map-container {
+    height: 400px;
+  }
 }
 
 @media (max-width: 768px) {
-  .file-upload,
-  .mermaid-chart {
-    max-width: 100%;
-  }
-
   .upload-icon-container {
     height: auto;
     padding: 15px;
   }
 
   .mind-map-container {
-    min-height: 300px;
+    height: 400px;
   }
 }
 
@@ -343,4 +340,18 @@
   .mind-map-heading {
     font-size: 18px;
   }
+
+  .mind-map-container {
+    height: 400px;
+  }
+}
+
+.mermaid-wrapper {
+  overflow: auto; /* Enable scrollbars when content overflows */
+  max-width: 100%; /* Adjust based on parent container */
+  max-height: 100vh; /* Ensure it doesn't take over the full screen */
+  white-space: nowrap; /* Prevent line breaks in large charts */
+  cursor: grab; /* Change cursor to a "grab" hand */
+  transform-origin: top center; /* Zoom from the top-left corner */
+  scroll-behavior: smooth;
 }
