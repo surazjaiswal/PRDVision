@@ -201,66 +201,194 @@ const sampleJson3 = {
     {
       "label": "Login",
       "components": [
-        { "type": "TextField", "label": "Email" },
-        { "type": "TextField", "label": "Password" },
-        { "type": "Button", "label": "Login" },
-        { "type": "Button", "label": "Sign Up" }
+        {
+          "type": "TextField",
+          "label": "Username"
+        },
+        {
+          "type": "TextField",
+          "label": "Password",
+          "secure": true
+        },
+        {
+          "type": "Button",
+          "label": "Login"
+        },
+        {
+          "type": "Button",
+          "label": "Forgot Password?"
+        },
+        {
+          "type": "Button",
+          "label": "Sign Up"
+        },
+        {
+          "type": "Button",
+          "label": "Biometric Login"
+        }
       ]
     },
     {
-      "label": "Sign Up",
+      "label": "Signup",
       "components": [
-        { "type": "TextField", "label": "Full Name" },
-        { "type": "TextField", "label": "Email" },
-        { "type": "TextField", "label": "Password" },
-        { "type": "TextField", "label": "Confirm Password" },
-        { "type": "Button", "label": "Create Account" }
+        {
+          "type": "TextField",
+          "label": "Full Name"
+        },
+        {
+          "type": "TextField",
+          "label": "Email"
+        },
+        {
+          "type": "TextField",
+          "label": "Password",
+          "secure": true
+        },
+        {
+          "type": "TextField",
+          "label": "Confirm Password",
+          "secure": true
+        },
+        {
+          "type": "Button",
+          "label": "Create Account"
+        }
       ]
     },
     {
-      "label": "Home Feed",
+      "label": "Dashboard",
       "components": [
-        { "type": "Avatar", "src": "https://example.com/user1.jpg" },
-        { "type": "TextField", "label": "What's on your mind?" },
-        { "type": "Button", "label": "Post" },
-        { "type": "ImageView", "src": "https://example.com/post1.jpg" },
-        { "type": "VideoView", "src": "https://example.com/video1.mp4" },
-        { "type": "Progress", "progress": 80 },
-        { "type": "Switch", "label": "Show Online Status" }
+        {
+          "type": "Text",
+          "label": "Account Balance: $1234.56"
+        },
+        {
+          "type": "Button",
+          "label": "Transfer Funds"
+        },
+        {
+          "type": "Button",
+          "label": "View Transaction History"
+        },
+        {
+          "type": "Button",
+          "label": "Spending Analysis"
+        },
+        {
+          "type": "Notification",
+          "message": "New transaction received"
+        }
       ]
     },
     {
-      "label": "Profile",
+      "label": "Fund Transfer",
       "components": [
-        { "type": "Avatar", "src": "https://example.com/user1.jpg" },
-        { "type": "Tabs", "tabs": ["Posts", "About", "Connections"] },
-        { "type": "Progress", "progress": 90 },
-        { "type": "Slider", "value": 50 }
+        {
+          "type": "Dropdown",
+          "label": "From Account",
+          "options": [
+            "Checking",
+            "Savings"
+          ]
+        },
+        {
+          "type": "Dropdown",
+          "label": "To Account",
+          "options": [
+            "Checking",
+            "Savings",
+            "External Account"
+          ]
+        },
+        {
+          "type": "TextField",
+          "label": "Amount"
+        },
+        {
+          "type": "TextField",
+          "label": "Note (Optional)"
+        },
+        {
+          "type": "Button",
+          "label": "Transfer"
+        }
       ]
     },
     {
-      "label": "Connections",
+      "label": "Transaction History",
       "components": [
-        { "type": "Avatar", "src": "https://example.com/user2.jpg" },
-        { "type": "Avatar", "src": "https://example.com/user3.jpg" },
-        { "type": "Dropdown", "options": ["Sort by Name", "Sort by Recent"] }
+        {
+          "type": "List",
+          "items": [
+            {
+              "date": "2024-03-08",
+              "description": "Transfer to Savings",
+              "amount": "-$100.00"
+            },
+            {
+              "date": "2024-03-07",
+              "description": "Deposit",
+              "amount": "$500.00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Spending Analysis",
+      "components": [
+        {
+          "type": "PieChart"
+        }
       ]
     },
     {
       "label": "Settings",
       "components": [
-        { "type": "Switch", "label": "Dark Mode" },
-        { "type": "Switch", "label": "Enable Notifications" },
-        { "type": "Button", "label": "Logout" }
+        {
+          "type": "Switch",
+          "label": "Dark Mode"
+        },
+        {
+          "type": "Switch",
+          "label": "Enable Notifications"
+        },
+        {
+          "type": "Button",
+          "label": "Logout"
+        }
       ]
     }
   ],
   "edges": [
-    { "from": 0, "to": 1 },
-    { "from": 1, "to": 2 },
-    { "from": 2, "to": 3 },
-    { "from": 2, "to": 4 },
-    { "from": 3, "to": 5 }
+    {
+      "from": 0,
+      "to": 1
+    },
+    {
+      "from": 0,
+      "to": 2
+    },
+    {
+      "from": 1,
+      "to": 2
+    },
+    {
+      "from": 2,
+      "to": 3
+    },
+    {
+      "from": 2,
+      "to": 4
+    },
+    {
+      "from": 2,
+      "to": 5
+    },
+    {
+      "from": 2,
+      "to": 6
+    }
   ]
 }
 

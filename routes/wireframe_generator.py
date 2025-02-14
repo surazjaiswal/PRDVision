@@ -19,45 +19,98 @@ class WireframeGenerator:
         Task Details:
         1. User Flow Extraction:
         - Analyze the PRD text to break down the user journey into clear sequential steps
-        - Identify user actions, transitions, decision points, and alternative flows
+        - Identify user actions, transitions between screens, and decision points
+        - Establish connections between screens using edge relationships
 
         2. UI Component Mapping:
         - Infer required UI screens from user actions
         - Generate structured UI components for each screen
         - Include elements like text fields, buttons, modals, dropdowns, notifications
-        - Introduce sample elements for different scenarios
+        - Include modern UI elements (avatars, progress bars, switches) where appropriate
 
         JSON Structure Requirements:
         - Use double quotes ONLY
         - No trailing commas in arrays/objects
         - All string values must be quoted
-        - Escape special characters with \\
+        - Escape special characters with \\\\
         - Validate bracket/brace nesting
+        - Maintain screen order based on user flow
 
         Example Output Structure:
         {{
             "screens": [
                 {{
-                    "name": "Screen Name",
+                    "label": "Login",
                     "components": [
-                        {{"type": "TextField", "label": "Email", "placeholder": "Enter email"}},
-                        {{"type": "Button", "label": "Submit", "action": "submit"}}
+                        {{ "type": "TextField", "label": "Email" }},
+                        {{ "type": "TextField", "label": "Password" }},
+                        {{ "type": "Button", "label": "Login" }},
+                        {{ "type": "Button", "label": "Sign Up" }}
+                    ]
+                }},
+                {{
+                    "label": "Sign Up",
+                    "components": [
+                        {{ "type": "TextField", "label": "Full Name" }},
+                        {{ "type": "TextField", "label": "Email" }},
+                        {{ "type": "TextField", "label": "Password" }},
+                        {{ "type": "TextField", "label": "Confirm Password" }},
+                        {{ "type": "Button", "label": "Create Account" }}
+                    ]
+                }},
+                {{
+                    "label": "Home Feed",
+                    "components": [
+                        {{ "type": "Avatar", "src": "https://example.com/user1.jpg" }},
+                        {{ "type": "TextField", "label": "What's on your mind?" }},
+                        {{ "type": "Button", "label": "Post" }},
+                        {{ "type": "ImageView", "src": "https://example.com/post1.jpg" }},
+                        {{ "type": "VideoView", "src": "https://example.com/video1.mp4" }},
+                        {{ "type": "Progress", "progress": 80 }},
+                        {{ "type": "Switch", "label": "Show Online Status" }}
+                    ]
+                }},
+                {{
+                    "label": "Profile",
+                    "components": [
+                        {{ "type": "Avatar", "src": "https://example.com/user1.jpg" }},
+                        {{ "type": "Tabs", "tabs": ["Posts", "About", "Connections"] }},
+                        {{ "type": "Progress", "progress": 90 }},
+                        {{ "type": "Slider", "value": 50 }}
+                    ]
+                }},
+                {{
+                    "label": "Connections",
+                    "components": [
+                        {{ "type": "Avatar", "src": "https://example.com/user2.jpg" }},
+                        {{ "type": "Avatar", "src": "https://example.com/user3.jpg" }},
+                        {{ "type": "Dropdown", "options": ["Sort by Name", "Sort by Recent"] }}
+                    ]
+                }},
+                {{
+                    "label": "Settings",
+                    "components": [
+                        {{ "type": "Switch", "label": "Dark Mode" }},
+                        {{ "type": "Switch", "label": "Enable Notifications" }},
+                        {{ "type": "Button", "label": "Logout" }}
                     ]
                 }}
             ],
-            "alternative_paths": [
-                {{
-                    "name": "Error Handling",
-                    "flow": "User sees error message if input is invalid"
-                }}
+            "edges": [
+                {{ "from": 0, "to": 1 }},
+                {{ "from": 1, "to": 2 }},
+                {{ "from": 2, "to": 3 }},
+                {{ "from": 2, "to": 4 }},
+                {{ "from": 3, "to": 5 }}
             ]
         }}
 
         Special Instructions:
         1. Validate JSON syntax before finalizing
-        2. Keep text values simple and escape-free
-        3. Maintain consistent indentation
-        4. Avoid line breaks in JSON values
+        2. Number edges based on screen array indexes (0-based)
+        3. Include both primary flows and alternative paths in edges
+        4. Maintain component consistency across similar screens
+        5. Include rich media components (Image/Video views) where relevant
 
         PRD Summary to Analyze:
         {self.prd_text}
@@ -107,11 +160,13 @@ class WireframeGenerator:
         return wireframe_components
     
     def validateJsonResponse(self, json_str):
-        try:
-            import json
-            return json.loads(json_str)
-        except json.JSONDecodeError as e:
-            raise Exception("Invalid JSON format.") from e
+        match = re.search(r'```json\n(.*?)\n```', json_str, re.DOTALL)
+        if match:
+            json_str = match.group(1)
+            parsed_json = json.loads(json_str)  # To validate JSON
+            return parsed_json
+        else:
+            print("No JSON found")
 
     def process(self):
         """Process the PRD text and return the summarized information."""

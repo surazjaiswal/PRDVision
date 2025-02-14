@@ -9,6 +9,7 @@ import mammoth from 'mammoth';
 import WireframeRenderer from "../wireframe/Wireframe";
 import SummaryView from '../summary/SummaryView';
 import Toolbar from '../toolbar/ToolbarContainer';
+import ReactFlowRenderer from "../wireframe/ReactFlowRenderer";
 
 // Set the pdf.js worker source
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js`;
@@ -293,12 +294,28 @@ return (
       <div className="mind-map-container">
         {selectedKey === "wireframes" && wireframeScreens?.screens ? (
           <div className="wireframe-container overflow-x">
-            {wireframeScreens.screens.map((screen, index) => (
+            <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+                  <h2 style={{ textAlign: "center", color: "#333" }}>
+                    Wireframes
+                  </h2>
+                  <div
+                    style={{
+                      gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                      gap: "16px",
+                      border: "1px solid green"
+                    }}
+                  >
+                    console.log(wireframeScreens)
+                    <ReactFlowRenderer wireframeData={{screens:wireframeScreens}} />
+                  </div>
+                </div>
+            {/* {wireframeScreens.screens.map((screen, index) => (
               <div key={index} style={{ border: "1px solid #ccc", padding: "8px", borderRadius: "5px" }}>
                 <h3>{screen.name}</h3>
+                
                 <WireframeRenderer wireframeData={{ screens: [screen] }} />
               </div>
-            ))}
+            ))} */}
           </div>
         ) : (
           // Default Mind Map / Summary View
