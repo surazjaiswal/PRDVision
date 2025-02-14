@@ -135,7 +135,7 @@ class PRDSummarizer:
                 print(mermaid_graph)
             else:
                 print("No Mermaid graph found.")
-
+ 
             print("\n\nMermaid graph:", mermaid_graph)
         else:
             raise Exception("Failed to get mermaid code.")
