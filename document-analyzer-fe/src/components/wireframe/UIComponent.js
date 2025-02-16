@@ -1,5 +1,5 @@
 import React from "react";
-import "./UIComponent.css";
+import "./UIComponent.css"
 
 const UIComponent = ({ data = {} }) => {
   switch (data.type) {
