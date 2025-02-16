@@ -105,370 +105,480 @@ const sampleJson = {
   ],
 };
 
-
 const sampleJson2 = {
-  "screens": [
+  screens: [
     {
-      "name": "Login Screen",
-      "layout": "centered",
-      "components": [
-        { "type": "Logo", "position": "top" },
-        { "type": "Heading", "text": "Welcome" },
-        { "type": "TextField", "label": "Email", "placeholder": "Enter your email" },
-        { "type": "TextField", "label": "Password", "placeholder": "Enter your password", "secure": true },
-        { "type": "Button", "label": "Sign in", "style": "primary", "fullWidth": true },
-        { "type": "Link", "text": "Forgot Password?", "align": "right" },
-        { "type": "Button", "label": "Create Account", "style": "secondary", "fullWidth": true }
-      ]
+      name: "Login Screen",
+      layout: "centered",
+      components: [
+        { type: "Logo", position: "top" },
+        { type: "Heading", text: "Welcome" },
+        { type: "TextField", label: "Email", placeholder: "Enter your email" },
+        {
+          type: "TextField",
+          label: "Password",
+          placeholder: "Enter your password",
+          secure: true,
+        },
+        { type: "Button", label: "Sign in", style: "primary", fullWidth: true },
+        { type: "Link", text: "Forgot Password?", align: "right" },
+        {
+          type: "Button",
+          label: "Create Account",
+          style: "secondary",
+          fullWidth: true,
+        },
+      ],
     },
     {
-      "name": "Profile Screen",
-      "layout": "scrollable",
-      "components": [
-        { "type": "Avatar", "src": "user-profile.jpg", "size": "large", "alignment": "center" },
-        { "type": "TextField", "label": "Full Name", "placeholder": "Enter your name" },
-        { "type": "TextField", "label": "Email Address", "placeholder": "Enter your email" },
-        { "type": "TextField", "label": "Phone Number", "placeholder": "Enter your phone number" },
-        { "type": "Switch", "label": "Enable Dark Mode" },
-        { "type": "Button", "label": "Update Profile", "style": "primary", "fullWidth": true }
-      ]
+      name: "Profile Screen",
+      layout: "scrollable",
+      components: [
+        {
+          type: "Avatar",
+          src: "user-profile.jpg",
+          size: "large",
+          alignment: "center",
+        },
+        {
+          type: "TextField",
+          label: "Full Name",
+          placeholder: "Enter your name",
+        },
+        {
+          type: "TextField",
+          label: "Email Address",
+          placeholder: "Enter your email",
+        },
+        {
+          type: "TextField",
+          label: "Phone Number",
+          placeholder: "Enter your phone number",
+        },
+        { type: "Switch", label: "Enable Dark Mode" },
+        {
+          type: "Button",
+          label: "Update Profile",
+          style: "primary",
+          fullWidth: true,
+        },
+      ],
     },
     {
-      "name": "Settings Screen",
-      "layout": "list",
-      "components": [
-        { "type": "Switch", "label": "Enable Notifications" },
-        { "type": "Slider", "label": "Volume", "min": 0, "max": 100, "value": 50 },
-        { "type": "Dropdown", "label": "Theme", "options": ["Light", "Dark", "System Default"] },
-        { "type": "Button", "label": "Save Settings", "style": "primary", "fullWidth": true }
-      ]
+      name: "Settings Screen",
+      layout: "list",
+      components: [
+        { type: "Switch", label: "Enable Notifications" },
+        { type: "Slider", label: "Volume", min: 0, max: 100, value: 50 },
+        {
+          type: "Dropdown",
+          label: "Theme",
+          options: ["Light", "Dark", "System Default"],
+        },
+        {
+          type: "Button",
+          label: "Save Settings",
+          style: "primary",
+          fullWidth: true,
+        },
+      ],
     },
     {
-      "name": "Chat Screen",
-      "layout": "stacked",
-      "components": [
-        { "type": "ChatBubble", "sender": "Alice", "message": "Hey, how are you?" },
-        { "type": "ChatBubble", "sender": "Bob", "message": "I'm good, thanks! You?" },
-        { "type": "ChatBubble", "sender": "Alice", "message": "Doing well! Are you free this weekend?" },
-        { "type": "TextField", "label": "Type a message", "placeholder": "Write a message..." },
-        { "type": "Button", "label": "Send", "style": "primary", "align": "right" }
-      ]
+      name: "Chat Screen",
+      layout: "stacked",
+      components: [
+        { type: "ChatBubble", sender: "Alice", message: "Hey, how are you?" },
+        {
+          type: "ChatBubble",
+          sender: "Bob",
+          message: "I'm good, thanks! You?",
+        },
+        {
+          type: "ChatBubble",
+          sender: "Alice",
+          message: "Doing well! Are you free this weekend?",
+        },
+        {
+          type: "TextField",
+          label: "Type a message",
+          placeholder: "Write a message...",
+        },
+        { type: "Button", label: "Send", style: "primary", align: "right" },
+      ],
     },
     {
-      "name": "Booking Screen",
-      "layout": "form",
-      "components": [
-        { "type": "Calendar", "label": "Select a Date" },
-        { "type": "TextField", "label": "Number of Guests", "placeholder": "Enter number of guests" },
-        { "type": "Dropdown", "label": "Booking Type", "options": ["Hotel", "Flight", "Car Rental"] },
-        { "type": "Button", "label": "Confirm Booking", "style": "primary", "fullWidth": true }
-      ]
+      name: "Booking Screen",
+      layout: "form",
+      components: [
+        { type: "Calendar", label: "Select a Date" },
+        {
+          type: "TextField",
+          label: "Number of Guests",
+          placeholder: "Enter number of guests",
+        },
+        {
+          type: "Dropdown",
+          label: "Booking Type",
+          options: ["Hotel", "Flight", "Car Rental"],
+        },
+        {
+          type: "Button",
+          label: "Confirm Booking",
+          style: "primary",
+          fullWidth: true,
+        },
+      ],
     },
     {
-      "name": "Dashboard",
-      "layout": "grid",
-      "components": [
-        { "type": "Tabs", "items": ["Overview", "Analytics", "Reports", "Settings"] },
-        { "type": "Card", "title": "Total Sales", "value": "$50,000", "icon": "chart" },
-        { "type": "Card", "title": "New Users", "value": "2,340", "icon": "users" },
-        { "type": "ProgressBar", "label": "Storage Usage", "value": 80, "color": "blue" }
-      ]
+      name: "Dashboard",
+      layout: "grid",
+      components: [
+        {
+          type: "Tabs",
+          items: ["Overview", "Analytics", "Reports", "Settings"],
+        },
+        { type: "Card", title: "Total Sales", value: "$50,000", icon: "chart" },
+        { type: "Card", title: "New Users", value: "2,340", icon: "users" },
+        {
+          type: "ProgressBar",
+          label: "Storage Usage",
+          value: 80,
+          color: "blue",
+        },
+      ],
     },
     {
-      "name": "E-Commerce Screen",
-      "layout": "product-grid",
-      "components": [
-        { "type": "Card", "title": "Nike Shoes", "value": "$120", "image": "nike-shoes.jpg" },
-        { "type": "Card", "title": "Smartphone", "value": "$999", "image": "smartphone.jpg" },
-        { "type": "Dropdown", "label": "Sort By", "options": ["Price Low to High", "Price High to Low", "Popularity"] },
-        { "type": "Button", "label": "Add to Cart", "style": "primary", "fullWidth": true }
-      ]
+      name: "E-Commerce Screen",
+      layout: "product-grid",
+      components: [
+        {
+          type: "Card",
+          title: "Nike Shoes",
+          value: "$120",
+          image: "nike-shoes.jpg",
+        },
+        {
+          type: "Card",
+          title: "Smartphone",
+          value: "$999",
+          image: "smartphone.jpg",
+        },
+        {
+          type: "Dropdown",
+          label: "Sort By",
+          options: ["Price Low to High", "Price High to Low", "Popularity"],
+        },
+        {
+          type: "Button",
+          label: "Add to Cart",
+          style: "primary",
+          fullWidth: true,
+        },
+      ],
     },
     {
-      "name": "Fitness Tracker",
-      "layout": "dashboard",
-      "components": [
-        { "type": "ProgressBar", "label": "Daily Steps", "value": 60, "color": "green" },
-        { "type": "Slider", "label": "Set Goal", "min": 5000, "max": 20000, "value": 10000 },
-        { "type": "Button", "label": "Start Workout", "style": "primary", "fullWidth": true }
-      ]
-    }
-  ]
+      name: "Fitness Tracker",
+      layout: "dashboard",
+      components: [
+        {
+          type: "ProgressBar",
+          label: "Daily Steps",
+          value: 60,
+          color: "green",
+        },
+        {
+          type: "Slider",
+          label: "Set Goal",
+          min: 5000,
+          max: 20000,
+          value: 10000,
+        },
+        {
+          type: "Button",
+          label: "Start Workout",
+          style: "primary",
+          fullWidth: true,
+        },
+      ],
+    },
+  ],
 };
 
 const sampleJson3 = {
-  "screens": [
+  screens: [
     {
-      "label": "Login",
-      "components": [
+      label: "Login",
+      components: [
         {
-          "type": "TextField",
-          "label": "Username"
+          type: "TextField",
+          label: "Username",
         },
         {
-          "type": "TextField",
-          "label": "Password",
-          "secure": true
+          type: "TextField",
+          label: "Password",
+          secure: true,
         },
         {
-          "type": "Button",
-          "label": "Login"
+          type: "Button",
+          label: "Login",
         },
         {
-          "type": "Button",
-          "label": "Forgot Password?"
+          type: "Button",
+          label: "Forgot Password?",
         },
         {
-          "type": "Button",
-          "label": "Sign Up"
+          type: "Button",
+          label: "Sign Up",
         },
         {
-          "type": "Button",
-          "label": "Biometric Login"
-        }
-      ]
+          type: "Button",
+          label: "Biometric Login",
+        },
+      ],
     },
     {
-      "label": "Signup",
-      "components": [
+      label: "Signup",
+      components: [
         {
-          "type": "TextField",
-          "label": "Full Name"
+          type: "TextField",
+          label: "Full Name",
         },
         {
-          "type": "TextField",
-          "label": "Email"
+          type: "TextField",
+          label: "Email",
         },
         {
-          "type": "TextField",
-          "label": "Password",
-          "secure": true
+          type: "TextField",
+          label: "Password",
+          secure: true,
         },
         {
-          "type": "TextField",
-          "label": "Confirm Password",
-          "secure": true
+          type: "TextField",
+          label: "Confirm Password",
+          secure: true,
         },
         {
-          "type": "Button",
-          "label": "Create Account"
-        }
-      ]
+          type: "Button",
+          label: "Create Account",
+        },
+      ],
     },
     {
-      "label": "Dashboard",
-      "components": [
+      label: "Dashboard",
+      components: [
         {
-          "type": "Text",
-          "label": "Account Balance: $1234.56"
+          type: "Text",
+          label: "Account Balance: $1234.56",
         },
         {
-          "type": "Button",
-          "label": "Transfer Funds"
+          type: "Button",
+          label: "Transfer Funds",
         },
         {
-          "type": "Button",
-          "label": "View Transaction History"
+          type: "Button",
+          label: "View Transaction History",
         },
         {
-          "type": "Button",
-          "label": "Spending Analysis"
+          type: "Button",
+          label: "Spending Analysis",
         },
         {
-          "type": "Notification",
-          "message": "New transaction received"
-        }
-      ]
+          type: "Notification",
+          message: "New transaction received",
+        },
+      ],
     },
     {
-      "label": "Fund Transfer",
-      "components": [
+      label: "Fund Transfer",
+      components: [
         {
-          "type": "Dropdown",
-          "label": "From Account",
-          "options": [
-            "Checking",
-            "Savings"
-          ]
+          type: "Dropdown",
+          label: "From Account",
+          options: ["Checking", "Savings"],
         },
         {
-          "type": "Dropdown",
-          "label": "To Account",
-          "options": [
-            "Checking",
-            "Savings",
-            "External Account"
-          ]
+          type: "Dropdown",
+          label: "To Account",
+          options: ["Checking", "Savings", "External Account"],
         },
         {
-          "type": "TextField",
-          "label": "Amount"
+          type: "TextField",
+          label: "Amount",
         },
         {
-          "type": "TextField",
-          "label": "Note (Optional)"
+          type: "TextField",
+          label: "Note (Optional)",
         },
         {
-          "type": "Button",
-          "label": "Transfer"
-        }
-      ]
+          type: "Button",
+          label: "Transfer",
+        },
+      ],
     },
     {
-      "label": "Transaction History",
-      "components": [
+      label: "Transaction History",
+      components: [
         {
-          "type": "List",
-          "items": [
+          type: "List",
+          items: [
             {
-              "date": "2024-03-08",
-              "description": "Transfer to Savings",
-              "amount": "-$100.00"
+              date: "2024-03-08",
+              description: "Transfer to Savings",
+              amount: "-$100.00",
             },
             {
-              "date": "2024-03-07",
-              "description": "Deposit",
-              "amount": "$500.00"
-            }
-          ]
-        }
-      ]
+              date: "2024-03-07",
+              description: "Deposit",
+              amount: "$500.00",
+            },
+          ],
+        },
+      ],
     },
     {
-      "label": "Spending Analysis",
-      "components": [
+      label: "Spending Analysis",
+      components: [
         {
-          "type": "PieChart"
-        }
-      ]
+          type: "PieChart",
+        },
+      ],
     },
     {
-      "label": "Settings",
-      "components": [
+      label: "Settings",
+      components: [
         {
-          "type": "Switch",
-          "label": "Dark Mode"
+          type: "Switch",
+          label: "Dark Mode",
         },
         {
-          "type": "Switch",
-          "label": "Enable Notifications"
+          type: "Switch",
+          label: "Enable Notifications",
         },
         {
-          "type": "Button",
-          "label": "Logout"
-        }
-      ]
-    }
+          type: "Button",
+          label: "Logout",
+        },
+      ],
+    },
   ],
-  "edges": [
+  edges: [
     {
-      "from": 0,
-      "to": 1
+      from: 0,
+      to: 1,
     },
     {
-      "from": 0,
-      "to": 2
+      from: 0,
+      to: 2,
     },
     {
-      "from": 1,
-      "to": 2
+      from: 1,
+      to: 2,
     },
     {
-      "from": 2,
-      "to": 3
+      from: 2,
+      to: 3,
     },
     {
-      "from": 2,
-      "to": 4
+      from: 2,
+      to: 4,
     },
     {
-      "from": 2,
-      "to": 5
+      from: 2,
+      to: 5,
     },
     {
-      "from": 2,
-      "to": 6
-    }
-  ]
-}
-
+      from: 2,
+      to: 6,
+    },
+  ],
+};
 
 const sampleJson4 = {
-  "screens": [
+  screens: [
     {
-      "name": "Login",
-      "elements": [
-        { "type": "text", "text": "Login", "style": "title" },
-        { "type": "input", "placeholder": "Email", "alignment": "center" },
-        { "type": "input", "placeholder": "Password", "alignment": "center" },
-        { "type": "button", "text": "Login", "color": "blue", "alignment": "center" },
-        { "type": "button", "text": "Sign Up", "color": "blue", "alignment": "center" }
-      ]
+      name: "Login",
+      elements: [
+        { type: "text", text: "Login", style: "title" },
+        { type: "input", placeholder: "Email", alignment: "center" },
+        { type: "input", placeholder: "Password", alignment: "center" },
+        { type: "button", text: "Login", color: "blue", alignment: "center" },
+        { type: "button", text: "Sign Up", color: "blue", alignment: "center" },
+      ],
     },
     {
-      "name": "Sign Up",
-      "elements": [
-        { "type": "text", "text": "Sign Up", "style": "title" },
-        { "type": "input", "placeholder": "Full Name", "alignment": "center" },
-        { "type": "input", "placeholder": "Email", "alignment": "center" },
-        { "type": "input", "placeholder": "Password", "alignment": "center" },
-        { "type": "input", "placeholder": "Confirm Password", "alignment": "center" },
-        { "type": "button", "text": "Create Account", "color": "blue", "alignment": "center" }
-      ]
+      name: "Sign Up",
+      elements: [
+        { type: "text", text: "Sign Up", style: "title" },
+        { type: "input", placeholder: "Full Name", alignment: "center" },
+        { type: "input", placeholder: "Email", alignment: "center" },
+        { type: "input", placeholder: "Password", alignment: "center" },
+        { type: "input", placeholder: "Confirm Password", alignment: "center" },
+        {
+          type: "button",
+          text: "Create Account",
+          color: "blue",
+          alignment: "center",
+        },
+      ],
     },
     {
-      "name": "Home Feed",
-      "elements": [
-        { "type": "avatar", "label": "Avatar", "alignment": "left" },
-        { "type": "input", "placeholder": "What's on your mind?", "alignment": "center" },
-        { "type": "button", "text": "Post", "color": "blue", "alignment": "center" },
-        { "type": "image", "label": "Image", "alignment": "center" },
-        { "type": "video", "source": "video.mp4", "alignment": "center" },
-        { "type": "progress", "value": 50, "alignment": "center" },
-        { "type": "checkbox", "label": "Show Online Status", "alignment": "left" }
-      ]
+      name: "Home Feed",
+      elements: [
+        { type: "avatar", label: "Avatar", alignment: "left" },
+        {
+          type: "input",
+          placeholder: "What's on your mind?",
+          alignment: "center",
+        },
+        { type: "button", text: "Post", color: "blue", alignment: "center" },
+        { type: "image", label: "Image", alignment: "center" },
+        { type: "video", source: "video.mp4", alignment: "center" },
+        { type: "progress", value: 50, alignment: "center" },
+        { type: "checkbox", label: "Show Online Status", alignment: "left" },
+      ],
     },
     {
-      "name": "Profile",
-      "elements": [
-        { "type": "avatar", "label": "Avatar", "alignment": "center" },
-        { "type": "tabs", "items": ["Posts", "About", "Connections"], "alignment": "center" },
-        { "type": "slider", "value": 75, "alignment": "center" },
-        { "type": "slider", "value": 40, "alignment": "center" }
-      ]
+      name: "Profile",
+      elements: [
+        { type: "avatar", label: "Avatar", alignment: "center" },
+        {
+          type: "tabs",
+          items: ["Posts", "About", "Connections"],
+          alignment: "center",
+        },
+        { type: "slider", value: 75, alignment: "center" },
+        { type: "slider", value: 40, alignment: "center" },
+      ],
     },
     {
-      "name": "Connections",
-      "elements": [
-        { "type": "avatar", "label": "Avatar", "alignment": "center" },
-        { "type": "dropdown", "label": "Sort by Name", "alignment": "center" }
-      ]
+      name: "Connections",
+      elements: [
+        { type: "avatar", label: "Avatar", alignment: "center" },
+        { type: "dropdown", label: "Sort by Name", alignment: "center" },
+      ],
     },
     {
-      "name": "Settings",
-      "elements": [
-        { "type": "checkbox", "label": "Dark Mode", "alignment": "left" },
-        { "type": "checkbox", "label": "Enable Notifications", "alignment": "left" },
-        { "type": "button", "text": "Logout", "color": "blue", "alignment": "center" }
-      ]
-    }
-  ]
-}
-
+      name: "Settings",
+      elements: [
+        { type: "checkbox", label: "Dark Mode", alignment: "left" },
+        { type: "checkbox", label: "Enable Notifications", alignment: "left" },
+        { type: "button", text: "Logout", color: "blue", alignment: "center" },
+      ],
+    },
+  ],
+};
 
 const WireframeAppSample = () => {
   const [wireframeData, setWireframeData] = useState(sampleJson3);
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h2 style={{ textAlign: "center", color: "#333" }}>
-        Wireframes
-      </h2>
+      <h2 style={{ textAlign: "center", color: "#333" }}>Wireframes</h2>
       <div
         style={{
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
           gap: "16px",
-          border: "1px solid green"
+          border: "1px solid green",
         }}
       >
         <ReactFlowRenderer wireframeData={{ screens: wireframeData }} />

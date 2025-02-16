@@ -18,11 +18,7 @@ const formatSummaryText = (text) => {
 
     // Detect and format bullet points (with emoji markers)
     if (/^[✅📌🔹🚀🏆📚🎯]/.test(line.trim())) {
-      return (
-        <li key={index}>
-          {line.trim()}
-        </li>
-      );
+      return <li key={index}>{line.trim()}</li>;
     }
 
     return <p key={index}>{line}</p>;
@@ -32,11 +28,7 @@ const formatSummaryText = (text) => {
 };
 
 const SummaryView = ({ summaryText }) => {
-  return (
-    <div className="summary-view">
-      {formatSummaryText(summaryText)}
-    </div>
-  );
+  return <div className="summary-view">{formatSummaryText(summaryText)}</div>;
 };
 
 export default SummaryView;

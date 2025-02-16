@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import UploadIcon from '../../assets/ic_upload_icon.svg';
-import MermaidBgIcon from '../../assets/ic_mermaid_container_bg.png';
-import './FileUpload.css';
-import axios from 'axios';
-import * as pdfjsLib from 'pdfjs-dist';
-import MermaidRenderer from './MermaidRenderer';
-import mammoth from 'mammoth';
+import React, { useState, useRef, useEffect } from "react";
+import UploadIcon from "../../assets/ic_upload_icon.svg";
+import MermaidBgIcon from "../../assets/ic_mermaid_container_bg.png";
+import "./FileUpload.css";
+import axios from "axios";
+import * as pdfjsLib from "pdfjs-dist";
+import MermaidRenderer from "./MermaidRenderer";
+import mammoth from "mammoth";
 import WireframeRenderer from "../wireframe/Wireframe";
-import SummaryView from '../summary/SummaryView';
-import Toolbar from '../toolbar/ToolbarContainer';
+import SummaryView from "../summary/SummaryView";
+import Toolbar from "../toolbar/ToolbarContainer";
 import ReactFlowRenderer from "../wireframe/ReactFlowRenderer";
 
 // Set the pdf.js worker source
@@ -17,12 +17,12 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs
 function FileUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [mermaidChart, setMermaidChart] = useState('');
-  const [wireframeScreens, setWireframeScreens] = useState('');
+  const [mermaidChart, setMermaidChart] = useState("");
+  const [wireframeScreens, setWireframeScreens] = useState("");
   const [availableKeys, setAvailableKeys] = useState([]);
-  const [selectedKey, setSelectedKey] = useState('');
+  const [selectedKey, setSelectedKey] = useState("");
   const [savedResponse, setSavedResponse] = useState(null);
-  const [summaryText, setSummaryText] = useState('');
+  const [summaryText, setSummaryText] = useState("");
   const [isSummaryView, setIsSummaryView] = useState(false);
   const [isResponseReceived, setIsResponseReceived] = useState(false);
   const zoomRef = useRef(null);
@@ -36,14 +36,13 @@ function FileUpload() {
   const [showZoomControls, setZoomControls] = useState(true);
 
   useEffect(() => {
-    setIsSummaryView(selectedKey === 'summarizedText');
+    setIsSummaryView(selectedKey === "summarizedText");
     if (selectedKey !== "Flowchart") {
       // Reset zoom when switching to other views
       if (zoomRef.current) {
         zoomRef.current.style.transform = "scale(1)";
       }
     }
-  
   }, [selectedKey]);
 
   const handleFileChange = async () => {
@@ -52,7 +51,7 @@ function FileUpload() {
       return;
     }
 
-    let extractedText = '';
+    let extractedText = "";
     setLoading(true);
     setIsResponseReceived(false); // Reset response state
 
@@ -61,10 +60,15 @@ function FileUpload() {
         extractedText = await extractTextFromPDF(await readPDF(selectedFile));
       } else if (selectedFile.type === "text/plain") {
         extractedText = await extractTextFromTXT(selectedFile);
-      } else if (selectedFile.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
+      } else if (
+        selectedFile.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ) {
         extractedText = await extractTextFromDOCX(selectedFile);
       } else {
-        alert("Unsupported file format. Please upload a PDF, TXT, or DOCX file.");
+        alert(
+          "Unsupported file format. Please upload a PDF, TXT, or DOCX file."
+        );
         return;
       }
 
@@ -88,11 +92,11 @@ function FileUpload() {
 
   const extractTextFromPDF = async (pdfData) => {
     const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
-    let text = '';
+    let text = "";
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
       const textContent = await page.getTextContent();
-      text += textContent.items.map(item => item.str).join(' ');
+      text += textContent.items.map((item) => item.str).join(" ");
     }
     return text;
   };
@@ -111,7 +115,9 @@ function FileUpload() {
       const reader = new FileReader();
       reader.onload = async (e) => {
         try {
-          const result = await mammoth.extractRawText({ arrayBuffer: e.target.result });
+          const result = await mammoth.extractRawText({
+            arrayBuffer: e.target.result,
+          });
           resolve(result.value);
         } catch (error) {
           reject(error);
@@ -123,9 +129,10 @@ function FileUpload() {
   };
 
   const preprocessText = (text) => {
-    return text.replace(/•|●|▪|◦|‣|★|☆/g, '')
-      .replace(/[^\w\s.,!?]/g, '')
-      .replace(/\s+/g, ' ')
+    return text
+      .replace(/•|●|▪|◦|‣|★|☆/g, "")
+      .replace(/[^\w\s.,!?]/g, "")
+      .replace(/\s+/g, " ")
       .trim();
   };
 
@@ -134,9 +141,16 @@ function FileUpload() {
     setLoading(true);
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/analyze', { text }, {
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      });
+      const response = await axios.post(
+        "http://127.0.0.1:8000/analyze",
+        { text },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
 
       console.log("Response from backend:", response.data);
 
@@ -147,7 +161,6 @@ function FileUpload() {
       setMermaidChart(Object.values(resData)[0]);
       setWireframeScreens(Object.values(resData)[0]);
       setIsResponseReceived(true);
-
     } catch (error) {
       console.error("Error analyzing text:", error);
     } finally {
@@ -157,16 +170,16 @@ function FileUpload() {
 
   const handleKeySelection = (newKey) => {
     setSelectedKey(newKey);
-    setZoomPercentage(100); // Reset zoom percentage when switching views  
+    setZoomPercentage(100); // Reset zoom percentage when switching views
     setZoomControls(true);
-    if (newKey === 'summarizedText') {
+    if (newKey === "summarizedText") {
       setIsSummaryView(true);
       setSummaryText(savedResponse["summarizedText"]);
       setZoomControls(false);
-    } else if (newKey === 'wireframes') {
+    } else if (newKey === "wireframes") {
       setIsSummaryView(false);
       setWireframeScreens(savedResponse["wireframes"]);
-    }  else {
+    } else {
       setIsSummaryView(false);
       setMermaidChart(savedResponse[newKey]);
     }
@@ -211,7 +224,7 @@ function FileUpload() {
     setStartY(e.pageY);
     setScrollLeft(zoomRef.current.scrollLeft);
     setScrollTop(zoomRef.current.scrollTop);
-    
+
     zoomRef.current.style.cursor = "grabbing";
     e.preventDefault(); // Prevent text selection while dragging
   };
@@ -222,7 +235,7 @@ function FileUpload() {
     requestAnimationFrame(() => {
       const dx = e.pageX - startX;
       const dy = e.pageY - startY;
-      
+
       zoomRef.current.scrollLeft = scrollLeft - dx;
       zoomRef.current.scrollTop = scrollTop - dy;
     });
@@ -235,82 +248,93 @@ function FileUpload() {
 
   // Add event listeners for mouse movement
   useEffect(() => {
-    setIsSummaryView(selectedKey === 'summarizedText');
+    setIsSummaryView(selectedKey === "summarizedText");
     if (selectedKey !== "Flowchart") {
       // Reset zoom when switching to other views
       if (zoomRef.current) {
         zoomRef.current.style.transform = "scale(1)";
         setZoomPercentage(100); // Reset zoom percentage as well
-        zoomLevel.current = 1;    // Reset zoom level to 1
+        zoomLevel.current = 1; // Reset zoom level to 1
       }
     }
 
     if (zoomRef.current) {
-        centerContent();
+      centerContent();
     }
-  
   }, [selectedKey, mermaidChart]);
 
-return (
-  <div className="container">
-    <div className="file-upload">
-      <div className="upload-icon-container">
-        <img src={UploadIcon} alt="UploadIcon" className="upload-icon" />
-        <p className="upload-text">Drop your PRD document here</p>
-        <p className="upload-text-message">or click to browse</p>
+  return (
+    <div className="container">
+      <div className="file-upload">
+        <div className="upload-icon-container">
+          <img src={UploadIcon} alt="UploadIcon" className="upload-icon" />
+          <p className="upload-text">Drop your PRD document here</p>
+          <p className="upload-text-message">or click to browse</p>
 
-        <div className="upload-controls">
-          <label className="upload-button">
-            Choose File
-            <input type="file" accept=".pdf,.txt,.docx" hidden onChange={(e) => setSelectedFile(e.target.files[0])} />
-          </label>
+          <div className="upload-controls">
+            <label className="upload-button">
+              Choose File
+              <input
+                type="file"
+                accept=".pdf,.txt,.docx"
+                hidden
+                onChange={(e) => setSelectedFile(e.target.files[0])}
+              />
+            </label>
 
-          <button className="generate-button" onClick={handleFileChange} disabled={!selectedFile}>
-            Generate
-          </button>
+            <button
+              className="generate-button"
+              onClick={handleFileChange}
+              disabled={!selectedFile}
+            >
+              Generate
+            </button>
+          </div>
         </div>
+
+        {selectedFile && <p className="file-name">{selectedFile.name}</p>}
+        {loading && <p className="loading-message">Processing document...</p>}
       </div>
 
-      {selectedFile && <p className="file-name">{selectedFile.name}</p>}
-      {loading && <p className="loading-message">Processing document...</p>}
-    </div>
-
-    <div className="mermaid-chart">
-      {!isResponseReceived ? (
-        <p className="default-message" >Waiting for analysis...</p>
-      ) : (
-        <div className="toolbar-element-container">
-          <Toolbar 
-            onSelectOption={handleKeySelection} 
-            availableKeys={availableKeys} 
-            zoomIn={zoomIn}
-            zoomOut={zoomOut}
-            zoomPercentage={zoomPercentage} 
-            showZoomControls={showZoomControls}
-          />
-        </div>
-      )}
-
-<div
-  className={`mind-map-container ${selectedKey === "wireframes" ? "disable-flex" : ""}`}
->
-        {selectedKey === "wireframes" && wireframeScreens?.screens ? (
-          <div>
-            <div>
-                  <div>
-                    <ReactFlowRenderer wireframeData={{screens:wireframeScreens}} />
-                  </div>
-                </div>
-          </div>
+      <div className="mermaid-chart">
+        {!isResponseReceived ? (
+          <p className="default-message">Waiting for analysis...</p>
         ) : (
-          // Default Mind Map / Summary View
+          <div className="toolbar-element-container">
+            <Toolbar
+              onSelectOption={handleKeySelection}
+              availableKeys={availableKeys}
+              zoomIn={zoomIn}
+              zoomOut={zoomOut}
+              zoomPercentage={zoomPercentage}
+              showZoomControls={showZoomControls}
+            />
+          </div>
+        )}
+
+        <div
+          className={`mind-map-container ${
+            selectedKey === "wireframes" ? "disable-flex" : ""
+          }`}
+        >
+          {selectedKey === "wireframes" && wireframeScreens?.screens ? (
+            <div>
+              <div>
+                <div>
+                  <ReactFlowRenderer
+                    wireframeData={{ screens: wireframeScreens }}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : // Default Mind Map / Summary View
           loading ? (
             <div class="loader"></div>
           ) : isSummaryView ? (
-            <SummaryView summaryText={summaryText}/>
+            <SummaryView summaryText={summaryText} />
           ) : (
-            <div 
-              className="mermaid-wrapper" 
+            <div
+              className="mermaid-wrapper"
               ref={zoomRef}
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
@@ -323,14 +347,11 @@ return (
                 <img src={MermaidBgIcon} alt="MermaidBgIcon" />
               )}
             </div>
-          )
-        )}
+          )}
+        </div>
       </div>
-
     </div>
-  </div>
-);
-
+  );
 }
 
 export default FileUpload;

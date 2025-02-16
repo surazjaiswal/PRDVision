@@ -36,7 +36,7 @@ const WireframeRenderer = ({ wireframeData }) => {
           yOffset += 18;
         }
       });
-      
+
       yOffset += 10; // Space between screens
     });
   }, [wireframeData]);

@@ -3,6 +3,7 @@ import requests
 import re
 import json
 
+
 class WireframeGenerator:
     def __init__(self, api_key, prd_text):
         self.prd_text = prd_text
@@ -11,7 +12,7 @@ class WireframeGenerator:
         self.api_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
     def getWireframeComponents(self):
-        """ AI-based text processing & structured wireframe generation """
+        """AI-based text processing & structured wireframe generation"""
 
         prompt = f"""
         You are an AI expert in product analysis, user experience design, and UI component identification. Given a Product Requirement Document (PRD) summary, extract a structured user journey while identifying necessary UI screens and components.
@@ -118,24 +119,14 @@ class WireframeGenerator:
         Generate only raw JSON output without any commentary.
         """
 
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ]
-        }
+        payload = {"contents": [{"parts": [{"text": prompt}]}]}
 
         response = requests.post(
             f"{self.api_url}?key={self.api_key}",
             json=payload,
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
-        
+
         print("\n\nAPI Response Status Code:", response.status_code)
         print("\nAPI Response Content:", response.text)
         print("\nWireframe response:", response.json())
@@ -145,22 +136,23 @@ class WireframeGenerator:
             if candidates:
                 response_text = candidates[0]["content"]["parts"][0]["text"]
                 print("Wireframe prompt response:", response_text)
-                
+
                 try:
                     wireframe_components = self.validateJsonResponse(response_text)
                     print("Final Wireframe components:", wireframe_components)
                 except Exception as e:
-                    raise Exception("Failed to extract valid JSON from the response.") from e
+                    raise Exception(
+                        "Failed to extract valid JSON from the response."
+                    ) from e
             else:
                 raise Exception("No candidates found in response.")
         else:
             raise Exception("Failed to get wireframe with Gemini API.")
 
-
         return wireframe_components
-    
+
     def validateJsonResponse(self, json_str):
-        match = re.search(r'```json\n(.*?)\n```', json_str, re.DOTALL)
+        match = re.search(r"```json\n(.*?)\n```", json_str, re.DOTALL)
         if match:
             json_str = match.group(1)
             parsed_json = json.loads(json_str)  # To validate JSON
@@ -172,4 +164,3 @@ class WireframeGenerator:
         """Process the PRD text and return the summarized information."""
         self.wireframe_components = self.getWireframeComponents()
         return self.wireframe_components
-

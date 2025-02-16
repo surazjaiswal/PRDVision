@@ -23,7 +23,7 @@
   justify-content: center;
   text-align: center;
   padding: 12px;
-  border: 2px solid #E5E7EB;
+  border: 2px solid #e5e7eb;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
@@ -43,9 +43,9 @@
   justify-content: center;
   padding: 16px;
   border-radius: 12px;
-  border: 2px dashed #2563EB;
+  border: 2px dashed #2563eb;
   box-sizing: border-box;
-  background-color: #F3F4F6;
+  background-color: #f3f4f6;
   transition: background-color 0.3s ease-in-out;
 }
 
@@ -62,7 +62,7 @@
 
 .upload-text-message {
   font-size: 14px;
-  color: #6B7280;
+  color: #6b7280;
 }
 
 /* Upload Controls Container */
@@ -72,11 +72,10 @@
   margin-top: 12px;
 }
 
-
 /* Upload Button (Choose File) */
 .upload-button {
   padding: 10px 15px;
-  background: linear-gradient(135deg, #2563EB, #0056b3);
+  background: linear-gradient(135deg, #2563eb, #0056b3);
   color: white;
   font-size: 14px;
   border: none;
@@ -86,14 +85,14 @@
 }
 
 .upload-button:hover {
-  background: linear-gradient(135deg, #0056b3, #2563EB);
+  background: linear-gradient(135deg, #0056b3, #2563eb);
   transform: scale(1.05);
 }
 
 /* Generate Button */
 .generate-button {
   padding: 10px 15px;
-  background: linear-gradient(135deg, #10B981, #047857); /* Green theme */
+  background: linear-gradient(135deg, #10b981, #047857); /* Green theme */
   color: white;
   font-size: 14px;
   border: none;
@@ -103,12 +102,12 @@
 }
 
 .generate-button:hover {
-  background: linear-gradient(135deg, #047857, #10B981);
+  background: linear-gradient(135deg, #047857, #10b981);
   transform: scale(1.05);
 }
 
 .generate-button:disabled {
-  background: #9CA3AF;
+  background: #9ca3af;
   cursor: not-allowed;
   transform: none;
 }
@@ -137,13 +136,13 @@
   width: 500px; /* Ensures proper width */
   height: 100%;
   border-radius: 12px;
-  background-color: #F9FAFB;
+  background-color: #f9fafb;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 2px solid #E5E7EB;
+  border: 2px solid #e5e7eb;
   padding: 20px;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
@@ -168,7 +167,7 @@
   width: 100%;
   height: auto;
   border-radius: 12px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #e5e7eb;
   box-sizing: border-box;
   background-color: #ffffff;
   display: flex;
@@ -182,7 +181,6 @@
 .disable-flex {
   display: block; /* or display: unset; if you want to remove flex behavior */
 }
-
 
 /* Background Effect for Empty MindMap */
 .mind-map-container img {
@@ -208,7 +206,7 @@
 
 .custom-dropdown:focus {
   outline: none;
-  border-color: #007BFF;
+  border-color: #007bff;
 }
 
 /* HTML: <div class="loader"></div> */
@@ -217,9 +215,20 @@
   aspect-ratio: 1.154;
   display: grid;
   color: #000;
-  background:
-    linear-gradient(to bottom left ,#0000 calc(50% - 1px),currentColor 0 calc(50% + 1px),#0000 0) right/50% 100%,
-    linear-gradient(to bottom right,#0000 calc(50% - 1px),currentColor 0 calc(50% + 1px),#0000 0) left /50% 100%,
+  background: linear-gradient(
+        to bottom left,
+        #0000 calc(50% - 1px),
+        currentColor 0 calc(50% + 1px),
+        #0000 0
+      )
+      right/50% 100%,
+    linear-gradient(
+        to bottom right,
+        #0000 calc(50% - 1px),
+        currentColor 0 calc(50% + 1px),
+        #0000 0
+      )
+      left / 50% 100%,
     linear-gradient(currentColor 0 0) bottom/100% 2px;
   background-repeat: no-repeat;
   transform-origin: 50% 66%;
@@ -239,8 +248,10 @@
   animation-duration: 2s;
 }
 
-@keyframes l5{
-  100% {transform:rotate(1turn)}
+@keyframes l5 {
+  100% {
+    transform: rotate(1turn);
+  }
 }
 
 .summary-view {
@@ -277,7 +288,7 @@
 }
 
 .zoom-btn {
-  background: #007BFF;
+  background: #007bff;
   color: white;
   border: none;
   padding: 8px 12px;
@@ -290,7 +301,7 @@
 .zoom-btn:hover {
   background: #0056b3;
 }
-.wireframe-container{
+.wireframe-container {
   padding: 12px;
   overflow-x: auto;
   display: flex;
@@ -315,7 +326,6 @@
     min-width: auto;
     padding: 15px;
   }
-
 }
 
 @media (max-width: 768px) {
@@ -341,7 +351,6 @@
   .mind-map-heading {
     font-size: 18px;
   }
-
 }
 
 .mermaid-wrapper {

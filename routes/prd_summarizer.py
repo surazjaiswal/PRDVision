@@ -1,6 +1,7 @@
 import requests
 import re
 
+
 class PRDSummarizer:
     def __init__(self, api_key, prd_text):
         self.prd_text = prd_text
@@ -25,23 +26,13 @@ class PRDSummarizer:
         **PRD Text to Summarize:**
         {self.prd_text}
         """
-        
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ]
-        }
+
+        payload = {"contents": [{"parts": [{"text": prompt}]}]}
 
         response = requests.post(
             f"{self.api_url}?key={self.api_key}",
             json=payload,
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
 
         print("\n\nSummarize text response - ", response.json())
@@ -61,22 +52,12 @@ class PRDSummarizer:
         {self.summarized_text}
         """
 
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ]
-        }
+        payload = {"contents": [{"parts": [{"text": prompt}]}]}
 
         response = requests.post(
             f"{self.api_url}?key={self.api_key}",
             json=payload,
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
         print("\n\nUser flow response - ", response.json())
 
@@ -106,22 +87,12 @@ class PRDSummarizer:
         {self.prd_text}
         """
 
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt
-                        }
-                    ]
-                }
-            ]
-        }
+        payload = {"contents": [{"parts": [{"text": prompt}]}]}
 
         response = requests.post(
             f"{self.api_url}?key={self.api_key}",
             json=payload,
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
         print("\n\nMermaid response - ", response.json())
 
@@ -135,11 +106,11 @@ class PRDSummarizer:
                 print(mermaid_graph)
             else:
                 print("No Mermaid graph found.")
- 
+
             print("\n\nMermaid graph:", mermaid_graph)
         else:
             raise Exception("Failed to get mermaid code.")
-        
+
         return mermaid_graph
 
     def process(self):
@@ -147,9 +118,9 @@ class PRDSummarizer:
         self.summarize_text()
         self.extract_user_flows()
         mermaid_code = self.generate_mermaid_code()
-        
+
         return {
             "summarized_text": self.summarized_text,
             "user_flows": self.user_flow_text,
-            "mermaid_code": mermaid_code
+            "mermaid_code": mermaid_code,
         }

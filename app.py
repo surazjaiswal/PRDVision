@@ -9,28 +9,32 @@ CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all r
 
 GEMINI_API_KEY = "AIzaSyAw2tIglLBt0EQ0tLKsmKg1Z4xk6bwGaf4"
 
-@app.route('/analyze', methods=['POST'])
+
+@app.route("/analyze", methods=["POST"])
 def analyze_text():
     data = request.get_json()
-    text = data['text']
+    text = data["text"]
 
     return defaultResponse(text)
-    
+
     print("Received text for analysis:", text)  # Debugging
 
     # prd_summarizer = PRDSummarizer(api_key=GEMINI_API_KEY, prd_text=text)
     # result = prd_summarizer.process()
-    
+
     wireframes = getWireframes(text)
     print("\n\n\nWireframes:", wireframes)
-    
-    resJson = jsonify({
-        # "summarizedText": result['summarized_text'],
-        # "Flowchart": result['mermaid_code'],
-        "wireframes": wireframes
-    })
+
+    resJson = jsonify(
+        {
+            # "summarizedText": result['summarized_text'],
+            # "Flowchart": result['mermaid_code'],
+            "wireframes": wireframes
+        }
+    )
 
     return resJson
+
 
 def defaultResponse(text):
     summarized_text = """
@@ -132,281 +136,197 @@ def defaultResponse(text):
     # wireframes = getWireframes(text)
     wireframes = getSampleWireframes()
 
-
-    resJson = jsonify({
-        "summarizedText": summarized_text,
-        "mermaid": mermaid_code,
-        "userFlow": user_flows,
-        "wireframes": wireframes
-    })
+    resJson = jsonify(
+        {
+            "summarizedText": summarized_text,
+            "mermaid": mermaid_code,
+            "userFlow": user_flows,
+            "wireframes": wireframes,
+        }
+    )
 
     return resJson
+
 
 def getWireframes(text):
     generator = WireframeGenerator(GEMINI_API_KEY, text)
     result = generator.process()
     return result
 
+
 def getSampleWireframes():
     sampleJson1 = {
-    "screens": [
-        {
-        "label": "Login",
-        "components": [
+        "screens": [
             {
-            "type": "TextField",
-            "label": "Username"
+                "label": "Login",
+                "components": [
+                    {"type": "TextField", "label": "Username"},
+                    {"type": "TextField", "label": "Password", "secure": True},
+                    {"type": "Button", "label": "Login"},
+                    {"type": "Button", "label": "Forgot Password?"},
+                    {"type": "Button", "label": "Sign Up"},
+                    {"type": "Button", "label": "Biometric Login"},
+                ],
             },
             {
-            "type": "TextField",
-            "label": "Password",
-            "secure": True
+                "label": "Signup",
+                "components": [
+                    {"type": "TextField", "label": "Full Name"},
+                    {"type": "TextField", "label": "Email"},
+                    {"type": "TextField", "label": "Password", "secure": True},
+                    {"type": "TextField", "label": "Confirm Password", "secure": True},
+                    {"type": "Button", "label": "Create Account"},
+                ],
             },
             {
-            "type": "Button",
-            "label": "Login"
+                "label": "Dashboard",
+                "components": [
+                    {"type": "Text", "label": "Account Balance: $1234.56"},
+                    {"type": "Button", "label": "Transfer Funds"},
+                    {"type": "Button", "label": "View Transaction History"},
+                    {"type": "Button", "label": "Spending Analysis"},
+                    {"type": "Notification", "message": "New transaction received"},
+                ],
             },
             {
-            "type": "Button",
-            "label": "Forgot Password?"
+                "label": "Fund Transfer",
+                "components": [
+                    {
+                        "type": "Dropdown",
+                        "label": "From Account",
+                        "options": ["Checking", "Savings"],
+                    },
+                    {
+                        "type": "Dropdown",
+                        "label": "To Account",
+                        "options": ["Checking", "Savings", "External Account"],
+                    },
+                    {"type": "TextField", "label": "Amount"},
+                    {"type": "TextField", "label": "Note (Optional)"},
+                    {"type": "Button", "label": "Transfer"},
+                ],
             },
             {
-            "type": "Button",
-            "label": "Sign Up"
+                "label": "Transaction History",
+                "components": [
+                    {
+                        "type": "List",
+                        "items": [
+                            {
+                                "date": "2024-03-08",
+                                "description": "Transfer to Savings",
+                                "amount": "-$100.00",
+                            },
+                            {
+                                "date": "2024-03-07",
+                                "description": "Deposit",
+                                "amount": "$500.00",
+                            },
+                        ],
+                    }
+                ],
+            },
+            {"label": "Spending Analysis", "components": [{"type": "PieChart"}]},
+            {
+                "label": "Settings",
+                "components": [
+                    {"type": "Switch", "label": "Dark Mode"},
+                    {"type": "Switch", "label": "Enable Notifications"},
+                    {"type": "Button", "label": "Logout"},
+                ],
+            },
+        ],
+        "edges": [
+            {"from": 0, "to": 1},
+            {"from": 0, "to": 2},
+            {"from": 1, "to": 2},
+            {"from": 2, "to": 3},
+            {"from": 2, "to": 4},
+            {"from": 2, "to": 5},
+            {"from": 2, "to": 6},
+        ],
+    }
+    sampleJson2 = {
+        "screens": [
+            {
+                "name": "Login/Register Screen",
+                "components": [
+                    {
+                        "type": "TextField",
+                        "label": "Email Address",
+                        "placeholder": "Enter your email",
+                    },
+                    {"type": "Button", "label": "Submit", "action": "validateInput"},
+                ],
             },
             {
-            "type": "Button",
-            "label": "Biometric Login"
+                "name": "Dashboard",
+                "components": [
+                    {"type": "HeaderText", "label": "Quiz History"},
+                    {"type": "List", "label": "Completed Quizzes"},
+                    {"type": "Card", "label": "Performance Analytics"},
+                    {"type": "PieChart", "label": "Topic Strengths"},
+                ],
+            },
+            {
+                "name": "Quiz Page",
+                "components": [
+                    {"type": "List", "label": "Questions", "count": 5},
+                    {"type": "TextField", "label": "Answer Question"},
+                    {
+                        "type": "Button",
+                        "label": "Next Question",
+                        "action": "nextQuestion",
+                    },
+                ],
+            },
+            {
+                "name": "Results Page",
+                "components": [
+                    {"type": "HeaderText", "label": "Quiz Summary"},
+                    {"type": "Table", "headers": ["Question", "Answer", "Feedback"]},
+                    {
+                        "type": "Button",
+                        "label": "Generate Report",
+                        "action": "generateReport",
+                    },
+                ],
+            },
+            {
+                "name": "Admin Panel",
+                "components": [
+                    {
+                        "type": "Navbar",
+                        "items": ["Manage Users", "Create Quiz", "View Analytics"],
+                    },
+                    {"type": "Card", "label": "User Management"},
+                    {"type": "Card", "label": "Quiz Statistics"},
+                ],
+            },
+            {
+                "name": "Management Dashboard",
+                "components": [
+                    {"type": "Navbar", "items": ["Dashboard", "Quizzes", "Users"]},
+                    {"type": "Card", "label": "Active Users"},
+                    {"type": "Card", "label": "New Quizzes"},
+                ],
+            },
+        ],
+        "alternative_paths": [
+            {
+                "name": "Error Handling",
+                "flow": "User sees error message if input is invalid",
             }
-        ]
-        },
-        {
-        "label": "Signup",
-        "components": [
-            {
-            "type": "TextField",
-            "label": "Full Name"
-            },
-            {
-            "type": "TextField",
-            "label": "Email"
-            },
-            {
-            "type": "TextField",
-            "label": "Password",
-            "secure": True
-            },
-            {
-            "type": "TextField",
-            "label": "Confirm Password",
-            "secure": True
-            },
-            {
-            "type": "Button",
-            "label": "Create Account"
-            }
-        ]
-        },
-        {
-        "label": "Dashboard",
-        "components": [
-            {
-            "type": "Text",
-            "label": "Account Balance: $1234.56"
-            },
-            {
-            "type": "Button",
-            "label": "Transfer Funds"
-            },
-            {
-            "type": "Button",
-            "label": "View Transaction History"
-            },
-            {
-            "type": "Button",
-            "label": "Spending Analysis"
-            },
-            {
-            "type": "Notification",
-            "message": "New transaction received"
-            }
-        ]
-        },
-        {
-        "label": "Fund Transfer",
-        "components": [
-            {
-            "type": "Dropdown",
-            "label": "From Account",
-            "options": [
-                "Checking",
-                "Savings"
-            ]
-            },
-            {
-            "type": "Dropdown",
-            "label": "To Account",
-            "options": [
-                "Checking",
-                "Savings",
-                "External Account"
-            ]
-            },
-            {
-            "type": "TextField",
-            "label": "Amount"
-            },
-            {
-            "type": "TextField",
-            "label": "Note (Optional)"
-            },
-            {
-            "type": "Button",
-            "label": "Transfer"
-            }
-        ]
-        },
-        {
-        "label": "Transaction History",
-        "components": [
-            {
-            "type": "List",
-            "items": [
-                {
-                "date": "2024-03-08",
-                "description": "Transfer to Savings",
-                "amount": "-$100.00"
-                },
-                {
-                "date": "2024-03-07",
-                "description": "Deposit",
-                "amount": "$500.00"
-                }
-            ]
-            }
-        ]
-        },
-        {
-        "label": "Spending Analysis",
-        "components": [
-            {
-            "type": "PieChart"
-            }
-        ]
-        },
-        {
-        "label": "Settings",
-        "components": [
-            {
-            "type": "Switch",
-            "label": "Dark Mode"
-            },
-            {
-            "type": "Switch",
-            "label": "Enable Notifications"
-            },
-            {
-            "type": "Button",
-            "label": "Logout"
-            }
-        ]
-        }
-    ],
-    "edges": [
-        {
-        "from": 0,
-        "to": 1
-        },
-        {
-        "from": 0,
-        "to": 2
-        },
-        {
-        "from": 1,
-        "to": 2
-        },
-        {
-        "from": 2,
-        "to": 3
-        },
-        {
-        "from": 2,
-        "to": 4
-        },
-        {
-        "from": 2,
-        "to": 5
-        },
-        {
-        "from": 2,
-        "to": 6
-        }
-    ]
-}
-    sampleJson2 =  {
-    "screens": [
-        {
-            "name": "Login/Register Screen",
-            "components": [
-                {"type": "TextField", "label": "Email Address", "placeholder": "Enter your email"},
-                {"type": "Button", "label": "Submit", "action": "validateInput"}
-            ]
-        },
-        {
-            "name": "Dashboard",
-            "components": [
-                {"type": "HeaderText", "label": "Quiz History"},
-                {"type": "List", "label": "Completed Quizzes"},
-                {"type": "Card", "label": "Performance Analytics"},
-                {"type": "PieChart", "label": "Topic Strengths"}
-            ]
-        },
-        {
-            "name": "Quiz Page",
-            "components": [
-                {"type": "List", "label": "Questions", "count": 5},
-                {"type": "TextField", "label": "Answer Question"},
-                {"type": "Button", "label": "Next Question", "action": "nextQuestion"}
-            ]
-        },
-        {
-            "name": "Results Page",
-            "components": [
-                {"type": "HeaderText", "label": "Quiz Summary"},
-                {"type": "Table", "headers": ["Question", "Answer", "Feedback"]},
-                {"type": "Button", "label": "Generate Report", "action": "generateReport"}
-            ]
-        },
-        {
-            "name": "Admin Panel",
-            "components": [
-                {"type": "Navbar", "items": ["Manage Users", "Create Quiz", "View Analytics"]},
-                {"type": "Card", "label": "User Management"},
-                {"type": "Card", "label": "Quiz Statistics"}
-            ]
-        },
-        {
-            "name": "Management Dashboard",
-            "components": [
-                {"type": "Navbar", "items": ["Dashboard", "Quizzes", "Users"]},
-                {"type": "Card", "label": "Active Users"},
-                {"type": "Card", "label": "New Quizzes"}
-            ]
-        }
-    ],
-    "alternative_paths": [
-        {
-            "name": "Error Handling",
-            "flow": "User sees error message if input is invalid"
-        }
-    ]
-}
-    
+        ],
+    }
+
     return sampleJson1
+
 
 @app.route("/")
 def hello():
     return "Hello, Flask API is running with DeepSeek AI!"
 
+
 if __name__ == "__main__":
-    app.run(port=8000, host='0.0.0.0', debug=True)
+    app.run(port=8000, host="0.0.0.0", debug=True)

@@ -41,7 +41,11 @@ const WireframeRenderer = ({ wireframeData }) => {
               fill: "#ADD8E6",
               fillStyle: "solid",
             });
-            ctx.fillText(component.label, padding + elementWidth / 3, yOffset + 25);
+            ctx.fillText(
+              component.label,
+              padding + elementWidth / 3,
+              yOffset + 25
+            );
             yOffset += 50;
             break;
 
@@ -57,13 +61,22 @@ const WireframeRenderer = ({ wireframeData }) => {
 
           case "Switch":
             ctx.fillText(component.label, padding, yOffset + 20);
-            rc.rectangle(padding + elementWidth - 50, yOffset, 50, 25, { roughness: 1.1, fill: "#CCC" });
+            rc.rectangle(padding + elementWidth - 50, yOffset, 50, 25, {
+              roughness: 1.1,
+              fill: "#CCC",
+            });
             yOffset += 40;
             break;
 
           case "Slider":
             ctx.fillText(component.label, padding, yOffset + 15);
-            rc.line(padding + 10, yOffset + 25, padding + elementWidth - 10, yOffset + 25, { roughness: 1 });
+            rc.line(
+              padding + 10,
+              yOffset + 25,
+              padding + elementWidth - 10,
+              yOffset + 25,
+              { roughness: 1 }
+            );
             yOffset += 40;
             break;
 
@@ -83,12 +96,19 @@ const WireframeRenderer = ({ wireframeData }) => {
               fill: "#F5F5DC",
               fillStyle: "solid",
             });
-            ctx.fillText(component.sender + ": " + component.message, padding + 10, yOffset + 30);
+            ctx.fillText(
+              component.sender + ": " + component.message,
+              padding + 10,
+              yOffset + 30
+            );
             yOffset += 60;
             break;
 
           case "Avatar":
-            rc.circle(padding + 20, yOffset + 20, 40, { roughness: 1.1, fill: "#87CEEB" });
+            rc.circle(padding + 20, yOffset + 20, 40, {
+              roughness: 1.1,
+              fill: "#87CEEB",
+            });
             ctx.fillText("Avatar", padding + 70, yOffset + 30);
             yOffset += 60;
             break;
@@ -105,24 +125,43 @@ const WireframeRenderer = ({ wireframeData }) => {
 
           case "Tabs":
             component.items.forEach((item, index) => {
-              rc.rectangle(padding + index * (elementWidth / component.items.length), yOffset, elementWidth / component.items.length, 30, {
-                roughness: 1.1,
-                fill: "#D3D3D3",
-                fillStyle: "solid",
-              });
-              ctx.fillText(item, padding + index * (elementWidth / component.items.length) + 10, yOffset + 20);
+              rc.rectangle(
+                padding + index * (elementWidth / component.items.length),
+                yOffset,
+                elementWidth / component.items.length,
+                30,
+                {
+                  roughness: 1.1,
+                  fill: "#D3D3D3",
+                  fillStyle: "solid",
+                }
+              );
+              ctx.fillText(
+                item,
+                padding + index * (elementWidth / component.items.length) + 10,
+                yOffset + 20
+              );
             });
             yOffset += 40;
             break;
 
           case "ProgressBar":
             ctx.fillText(component.label, padding, yOffset + 15);
-            rc.rectangle(padding, yOffset + 20, elementWidth, 20, { roughness: 1.1, fill: "#CCC" });
-            rc.rectangle(padding, yOffset + 20, (component.value / 100) * elementWidth, 20, {
+            rc.rectangle(padding, yOffset + 20, elementWidth, 20, {
               roughness: 1.1,
-              fill: "blue",
-              fillStyle: "solid",
+              fill: "#CCC",
             });
+            rc.rectangle(
+              padding,
+              yOffset + 20,
+              (component.value / 100) * elementWidth,
+              20,
+              {
+                roughness: 1.1,
+                fill: "blue",
+                fillStyle: "solid",
+              }
+            );
             yOffset += 50;
             break;
 
@@ -137,13 +176,17 @@ const WireframeRenderer = ({ wireframeData }) => {
     });
   }, [wireframeData]);
 
-  return <canvas ref={canvasRef} width={250} height={700} style={{ border: "1px solid #ccc" }}></canvas>;
+  return (
+    <canvas
+      ref={canvasRef}
+      width={250}
+      height={700}
+      style={{ border: "1px solid #ccc" }}
+    ></canvas>
+  );
 };
 
 export default WireframeRenderer;
-
-
-
 
 // import React, { useEffect, useRef } from "react";
 // import rough from "roughjs";
@@ -172,7 +215,7 @@ export default WireframeRenderer;
 //       screen.components.forEach((component) => {
 //         if (yOffset + 40 > canvas.height) return; // Prevent overflow
 
-//         ctx.font = "12px Arial"; 
+//         ctx.font = "12px Arial";
 //         ctx.fillStyle = "#000"; // Reset color
 
 //         switch (component.type) {
@@ -254,8 +297,6 @@ export default WireframeRenderer;
 // };
 
 // export default WireframeRenderer;
-
-
 
 // import React, { useEffect, useRef, useState } from "react";
 // import rough from "roughjs";

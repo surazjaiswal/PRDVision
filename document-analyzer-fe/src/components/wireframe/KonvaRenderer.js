@@ -115,7 +115,12 @@ const UIComponentRenderer = ({ wireframeData }) => {
                       y={yOffset}
                     />
                     <Line
-                      points={[xOffset, yOffset + 25, xOffset + 200, yOffset + 25]}
+                      points={[
+                        xOffset,
+                        yOffset + 25,
+                        xOffset + 200,
+                        yOffset + 25,
+                      ]}
                       stroke="black"
                       strokeWidth={2}
                     />
@@ -170,8 +175,19 @@ const UIComponentRenderer = ({ wireframeData }) => {
               case "Avatar":
                 element = (
                   <Group key={`avatar-${index}`}>
-                    <Circle x={xOffset + 20} y={yOffset + 20} radius={20} fill="#87CEEB" />
-                    <Text text="Avatar" fontSize={12} fill="black" x={xOffset} y={yOffset + 45} />
+                    <Circle
+                      x={xOffset + 20}
+                      y={yOffset + 20}
+                      radius={20}
+                      fill="#87CEEB"
+                    />
+                    <Text
+                      text="Avatar"
+                      fontSize={12}
+                      fill="black"
+                      x={xOffset}
+                      y={yOffset + 45}
+                    />
                   </Group>
                 );
                 break;
@@ -187,7 +203,13 @@ const UIComponentRenderer = ({ wireframeData }) => {
                       fill="#F0E68C"
                       cornerRadius={5}
                     />
-                    <Text text="Calendar" fontSize={14} fill="black" x={xOffset + 10} y={yOffset + 20} />
+                    <Text
+                      text="Calendar"
+                      fontSize={14}
+                      fill="black"
+                      x={xOffset + 10}
+                      y={yOffset + 20}
+                    />
                   </Group>
                 );
                 yOffset += ELEMENT_HEIGHT;
@@ -275,4 +297,3 @@ const UIComponentRenderer = ({ wireframeData }) => {
 };
 
 export default UIComponentRenderer;
-

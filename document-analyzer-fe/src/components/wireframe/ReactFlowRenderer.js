@@ -38,20 +38,39 @@ const UIComponent = ({ data }) => {
     case "VideoView":
       return <div className="image-placeholder">Video</div>;
     case "Avatar":
-      return <img src={data.src || "https://via.placeholder.com/50"} alt="Avatar" className="avatar" />;
+      return (
+        <img
+          src={data.src || "https://via.placeholder.com/50"}
+          alt="Avatar"
+          className="avatar"
+        />
+      );
     case "Progress":
       return (
         <div className="progress-bar">
-          <div style={{ width: `${data.progress}%` }} className="progress-fill"></div>
+          <div
+            style={{ width: `${data.progress}%` }}
+            className="progress-fill"
+          ></div>
         </div>
       );
     case "Slider":
-      return <input type="range" min="0" max="100" defaultValue={data.value} className="slider" />;
+      return (
+        <input
+          type="range"
+          min="0"
+          max="100"
+          defaultValue={data.value}
+          className="slider"
+        />
+      );
     case "Tabs":
       return (
         <div className="tabs">
           {data.tabs.map((tab, index) => (
-            <div key={index} className="tab">{tab}</div>
+            <div key={index} className="tab">
+              {tab}
+            </div>
           ))}
         </div>
       );
@@ -79,16 +98,25 @@ const ScreenNode = ({ data }) => {
 // Define Edge
 const CustomEdge = ({ id, sourceX, sourceY, targetX, targetY }) => {
   // Ensure smooth vertical Bezier path (fixes the wavy issue)
-  const edgePath = `M${sourceX},${sourceY} C${sourceX},${(sourceY + targetY) / 2} ${targetX},${(sourceY + targetY) / 2} ${targetX},${targetY}`;
+  const edgePath = `M${sourceX},${sourceY} C${sourceX},${
+    (sourceY + targetY) / 2
+  } ${targetX},${(sourceY + targetY) / 2} ${targetX},${targetY}`;
 
   return (
     <g>
-      <path id={id} className="custom-edge" d={edgePath} stroke="black" strokeWidth="2" fill="none" strokeDasharray="5,5" />
+      <path
+        id={id}
+        className="custom-edge"
+        d={edgePath}
+        stroke="black"
+        strokeWidth="2"
+        fill="none"
+        strokeDasharray="5,5"
+      />
       {/* <circle cx={targetX} cy={targetY} r={4} fill="red" /> */}
     </g>
   );
 };
-
 
 const nodeTypes = { screen: ScreenNode };
 const edgeTypes = { custom: CustomEdge };
@@ -159,7 +187,13 @@ const FlowComponent = ({ wireframeData }) => {
 
   return (
     <div className="flow-container">
-      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} edgeTypes={edgeTypes} fitView>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
+        fitView
+      >
         <Controls />
         <Background />
       </ReactFlow>
