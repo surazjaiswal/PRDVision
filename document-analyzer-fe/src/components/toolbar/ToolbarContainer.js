@@ -11,6 +11,7 @@ const Toolbar = ({
   zoomOut,
   zoomPercentage,
   showZoomControls,
+  showZoomIcons,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(availableKeys[0]);
@@ -60,17 +61,19 @@ const Toolbar = ({
         <div class="zoom-controllers">
           <button
             onClick={zoomOut}
-            className="zoom-btn"
+            className={`zoom-btn ${showZoomIcons ? "" : "hidden"}`}
             disabled={zoomPercentage <= 40}
           >
             <img src={ZoomOutIcon} alt="Zoom Out" className="zoom-icon" />
           </button>
 
-          <span className="zoom-counter">{zoomPercentage}%</span>
+          <span className={`zoom-counter ${showZoomIcons ? "" : "hidden"}`}>
+            {zoomPercentage}%
+          </span>
 
           <button
             onClick={zoomIn}
-            className="zoom-btn"
+            className={`zoom-btn ${showZoomIcons ? "" : "hidden"}`}
             disabled={zoomPercentage >= 200}
           >
             <img src={ZoomInIcon} alt="Zoom In" className="zoom-icon" />

@@ -34,6 +34,7 @@ function FileUpload() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const [showZoomControls, setZoomControls] = useState(true);
+  const [showZoomIcons, setZoomIcons] = useState(false);
 
   useEffect(() => {
     setIsSummaryView(selectedKey === "summarizedText");
@@ -170,8 +171,19 @@ function FileUpload() {
 
   const handleKeySelection = (newKey) => {
     setSelectedKey(newKey);
-    setZoomPercentage(100); // Reset zoom percentage when switching views
     setZoomControls(true);
+    setZoomIcons(false)
+    if (newKey === "mermaid") {
+      setZoomIcons(true)
+    } else {
+      setZoomIcons(false)
+      if (zoomRef.current) {
+        zoomRef.current.style.transform = "scale(1)";
+        setZoomPercentage(100); // Reset zoom percentage as well
+        zoomLevel.current = 1; // Reset zoom level to 1
+        centerContent();
+      }
+    }
     if (newKey === "summarizedText") {
       setIsSummaryView(true);
       setSummaryText(savedResponse["summarizedText"]);
@@ -308,6 +320,7 @@ function FileUpload() {
               zoomOut={zoomOut}
               zoomPercentage={zoomPercentage}
               showZoomControls={showZoomControls}
+              showZoomIcons={showZoomIcons}
             />
           </div>
         )}

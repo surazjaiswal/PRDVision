@@ -15,20 +15,20 @@ def analyze_text():
     data = request.get_json()
     text = data["text"]
 
-    return defaultResponse(text)
+    # return defaultResponse(text)
 
     print("Received text for analysis:", text)  # Debugging
 
-    # prd_summarizer = PRDSummarizer(api_key=GEMINI_API_KEY, prd_text=text)
-    # result = prd_summarizer.process()
+    prd_summarizer = PRDSummarizer(api_key=GEMINI_API_KEY, prd_text=text)
+    result = prd_summarizer.process()
 
     wireframes = getWireframes(text)
     print("\n\n\nWireframes:", wireframes)
 
     resJson = jsonify(
         {
-            # "summarizedText": result['summarized_text'],
-            # "Flowchart": result['mermaid_code'],
+            "summarizedText": result['summarized_text'],
+            "Flowchart": result['mermaid_code'],
             "wireframes": wireframes
         }
     )
