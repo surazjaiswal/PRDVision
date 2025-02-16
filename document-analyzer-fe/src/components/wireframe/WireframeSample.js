@@ -568,8 +568,226 @@ const sampleJson4 = {
   ],
 };
 
+const sampleJson5 = {
+  screens: [
+    {
+      label: "Login",
+      components: [
+        {
+          type: "TextField",
+          label: "Email",
+        },
+        {
+          type: "TextField",
+          label: "Password",
+        },
+        {
+          type: "Button",
+          label: "Login",
+        },
+        {
+          type: "Button",
+          label: "Sign Up",
+        },
+        {
+          type: "Button",
+          label: "Google Authentication",
+        },
+      ],
+    },
+    {
+      label: "Sign Up",
+      components: [
+        {
+          type: "TextField",
+          label: "Full Name",
+        },
+        {
+          type: "TextField",
+          label: "Email",
+        },
+        {
+          type: "TextField",
+          label: "Password",
+        },
+        {
+          type: "TextField",
+          label: "Confirm Password",
+        },
+        {
+          type: "Button",
+          label: "Create Account",
+        },
+      ],
+    },
+    {
+      label: "Dashboard",
+      components: [
+        {
+          type: "List",
+          label: "Quiz History",
+        },
+        {
+          type: "List",
+          label: "Recommendations",
+        },
+        {
+          type: "Chart",
+          label: "Performance Stats",
+        },
+      ],
+    },
+    {
+      label: "Quiz Selection",
+      components: [
+        {
+          type: "Dropdown",
+          label: "Topic",
+        },
+        {
+          type: "Dropdown",
+          label: "Quiz Type",
+        },
+        {
+          type: "Button",
+          label: "Start Quiz",
+        },
+      ],
+    },
+    {
+      label: "Quiz Page",
+      components: [
+        {
+          type: "Text",
+          label: "Question",
+        },
+        {
+          type: "RadioGroup",
+          label: "Options",
+        },
+        {
+          type: "TextField",
+          label: "Answer",
+        },
+        {
+          type: "Timer",
+        },
+        {
+          type: "Button",
+          label: "Submit",
+        },
+      ],
+    },
+    {
+      label: "Results Page",
+      components: [
+        {
+          type: "Text",
+          label: "Score",
+        },
+        {
+          type: "List",
+          label: "Correct/Incorrect Answers",
+        },
+        {
+          type: "Text",
+          label: "AI Feedback",
+        },
+        {
+          type: "List",
+          label: "Improvement Plan",
+        },
+        {
+          type: "List",
+          label: "Suggested Quizzes",
+        },
+      ],
+    },
+    {
+      label: "Quiz Creation",
+      components: [
+        {
+          type: "TextField",
+          label: "Question",
+        },
+        {
+          type: "TextField",
+          label: "Options",
+        },
+        {
+          type: "Button",
+          label: "Add Question",
+        },
+        {
+          type: "Button",
+          label: "Generate Questions (AI)",
+        },
+        {
+          type: "Button",
+          label: "Publish Quiz",
+        },
+      ],
+    },
+    {
+      label: "Admin Panel",
+      components: [
+        {
+          type: "List",
+          label: "Manage Users",
+        },
+        {
+          type: "List",
+          label: "Manage Quizzes",
+        },
+        {
+          type: "List",
+          label: "System Settings",
+        },
+      ],
+    },
+  ],
+  edges: [
+    {
+      from: 0,
+      to: 2,
+    },
+    {
+      from: 0,
+      to: 1,
+    },
+    {
+      from: 1,
+      to: 2,
+    },
+    {
+      from: 2,
+      to: 3,
+    },
+    {
+      from: 3,
+      to: 4,
+    },
+    {
+      from: 4,
+      to: 5,
+    },
+    {
+      from: 2,
+      to: 7,
+    },
+    {
+      from: 7,
+      to: 4,
+    },
+    {
+      from: 2,
+      to: 8,
+    },
+  ],
+};
+
 const WireframeAppSample = () => {
-  const [wireframeData, setWireframeData] = useState(sampleJson3);
+  const [wireframeData, setWireframeData] = useState(sampleJson5);
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
