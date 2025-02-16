@@ -45,6 +45,29 @@ body {
     padding: 20px;
     position: relative;
   }
+
+
+/* Scattered Layout */
+.screen-container:nth-child(odd) {
+  top: calc(10% + (var(--index, 0) * 80px));
+  left: calc(5% + (var(--index, 0) * 150px));
+}
+
+
+
+.screen-container:nth-child(even) {
+  top: calc(30% + (var(--index, 0) * 70px));
+  left: calc(15% + (var(--index, 0) * 140px));
+}
+
+
+
+/* Connection Line Enhancements */
+.react-flow__edge-path {
+  stroke: #333 !important;
+  stroke-width: 3px !important;
+  stroke-dasharray: 4;
+}
   
   /* Screen Design */
   .screen {
@@ -183,6 +206,17 @@ body {
   
   /* Responsive Grid Layout */
   @media (max-width: 1024px) {
+
+    .screen-container:nth-child(odd) {
+      top: calc(5% + (var(--index, 0) * 60px));
+      left: calc(5% + (var(--index, 0) * 120px));
+    }
+
+    .screen-container:nth-child(even) {
+      top: calc(25% + (var(--index, 0) * 50px));
+      left: calc(10% + (var(--index, 0) * 110px));
+    }
+
     .flow-container {
       flex-wrap: wrap;
     }
