@@ -14,7 +14,7 @@ def analyze_text():
     data = request.get_json()
     text = data['text']
 
-    # return defaultResponse(text)
+    return defaultResponse(text)
     
     print("Received text for analysis:", text)  # Debugging
 
@@ -129,7 +129,7 @@ def defaultResponse(text):
     """
     user_flows = []
     ui_components = []
-    wireframes = getWireframes(text)
+    # wireframes = getWireframes(text)
     wireframes = getSampleWireframes()
 
 
@@ -148,7 +148,202 @@ def getWireframes(text):
     return result
 
 def getSampleWireframes():
-    return {
+    sampleJson1 = {
+    "screens": [
+        {
+        "label": "Login",
+        "components": [
+            {
+            "type": "TextField",
+            "label": "Username"
+            },
+            {
+            "type": "TextField",
+            "label": "Password",
+            "secure": True
+            },
+            {
+            "type": "Button",
+            "label": "Login"
+            },
+            {
+            "type": "Button",
+            "label": "Forgot Password?"
+            },
+            {
+            "type": "Button",
+            "label": "Sign Up"
+            },
+            {
+            "type": "Button",
+            "label": "Biometric Login"
+            }
+        ]
+        },
+        {
+        "label": "Signup",
+        "components": [
+            {
+            "type": "TextField",
+            "label": "Full Name"
+            },
+            {
+            "type": "TextField",
+            "label": "Email"
+            },
+            {
+            "type": "TextField",
+            "label": "Password",
+            "secure": True
+            },
+            {
+            "type": "TextField",
+            "label": "Confirm Password",
+            "secure": True
+            },
+            {
+            "type": "Button",
+            "label": "Create Account"
+            }
+        ]
+        },
+        {
+        "label": "Dashboard",
+        "components": [
+            {
+            "type": "Text",
+            "label": "Account Balance: $1234.56"
+            },
+            {
+            "type": "Button",
+            "label": "Transfer Funds"
+            },
+            {
+            "type": "Button",
+            "label": "View Transaction History"
+            },
+            {
+            "type": "Button",
+            "label": "Spending Analysis"
+            },
+            {
+            "type": "Notification",
+            "message": "New transaction received"
+            }
+        ]
+        },
+        {
+        "label": "Fund Transfer",
+        "components": [
+            {
+            "type": "Dropdown",
+            "label": "From Account",
+            "options": [
+                "Checking",
+                "Savings"
+            ]
+            },
+            {
+            "type": "Dropdown",
+            "label": "To Account",
+            "options": [
+                "Checking",
+                "Savings",
+                "External Account"
+            ]
+            },
+            {
+            "type": "TextField",
+            "label": "Amount"
+            },
+            {
+            "type": "TextField",
+            "label": "Note (Optional)"
+            },
+            {
+            "type": "Button",
+            "label": "Transfer"
+            }
+        ]
+        },
+        {
+        "label": "Transaction History",
+        "components": [
+            {
+            "type": "List",
+            "items": [
+                {
+                "date": "2024-03-08",
+                "description": "Transfer to Savings",
+                "amount": "-$100.00"
+                },
+                {
+                "date": "2024-03-07",
+                "description": "Deposit",
+                "amount": "$500.00"
+                }
+            ]
+            }
+        ]
+        },
+        {
+        "label": "Spending Analysis",
+        "components": [
+            {
+            "type": "PieChart"
+            }
+        ]
+        },
+        {
+        "label": "Settings",
+        "components": [
+            {
+            "type": "Switch",
+            "label": "Dark Mode"
+            },
+            {
+            "type": "Switch",
+            "label": "Enable Notifications"
+            },
+            {
+            "type": "Button",
+            "label": "Logout"
+            }
+        ]
+        }
+    ],
+    "edges": [
+        {
+        "from": 0,
+        "to": 1
+        },
+        {
+        "from": 0,
+        "to": 2
+        },
+        {
+        "from": 1,
+        "to": 2
+        },
+        {
+        "from": 2,
+        "to": 3
+        },
+        {
+        "from": 2,
+        "to": 4
+        },
+        {
+        "from": 2,
+        "to": 5
+        },
+        {
+        "from": 2,
+        "to": 6
+        }
+    ]
+}
+    sampleJson2 =  {
     "screens": [
         {
             "name": "Login/Register Screen",
@@ -206,6 +401,8 @@ def getSampleWireframes():
         }
     ]
 }
+    
+    return sampleJson1
 
 @app.route("/")
 def hello():

@@ -164,8 +164,9 @@
 
 /* Mind Map Container */
 .mind-map-container {
+  min-height: 500px;
   width: 100%;
-  height: 500px;
+  height: auto;
   border-radius: 12px;
   border: 1px solid #E5E7EB;
   box-sizing: border-box;
@@ -177,6 +178,11 @@
   overflow: scroll;
   overflow-x: auto;
 }
+
+.disable-flex {
+  display: block; /* or display: unset; if you want to remove flex behavior */
+}
+
 
 /* Background Effect for Empty MindMap */
 .mind-map-container img {
@@ -310,19 +316,12 @@
     padding: 15px;
   }
 
-  .mind-map-container {
-    height: 400px;
-  }
 }
 
 @media (max-width: 768px) {
   .upload-icon-container {
     height: auto;
     padding: 15px;
-  }
-
-  .mind-map-container {
-    height: 400px;
   }
 }
 
@@ -343,9 +342,6 @@
     font-size: 18px;
   }
 
-  .mind-map-container {
-    height: 400px;
-  }
 }
 
 .mermaid-wrapper {
