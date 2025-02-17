@@ -6,6 +6,8 @@
     "@excalidraw/excalidraw": "^0.17.6",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
+    "dager": "^2.0.1",
+    "dagre": "^0.8.5",
     "jsmind": "^0.8.6",
     "konva": "^9.3.18",
     "lucide-react": "^0.475.0",

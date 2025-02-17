@@ -13,17 +13,24 @@ class PRDSummarizer:
 
     def summarize_text(self):
         prompt = f"""
-        You are an expert in summarizing Product Requirements Documents (PRDs). Your task is to generate a concise and comprehensive summary of the provided PRD text. The summary should capture the key points, objectives, features, and requirements outlined in the document. Ensure the summary is well-structured, easy to understand, and does not exceed 5000 characters.
+        You are an expert in summarizing Product Requirements Documents (PRDs). Your task is to generate a concise, structured, and comprehensive summary of the provided PRD text. The summary should be well-organized, easy to understand, and formatted for readability. Ensure it captures key points, objectives, features, and requirements within a 5000-character limit.
 
-        **Guidelines for the Summary:**
-        1. Focus on the main purpose and goals of the product.
-        2. Highlight the key features and functionalities.
-        3. Include any critical technical or business requirements.
-        4. Mention any constraints, assumptions, or dependencies.
-        5. Avoid unnecessary details, examples, or repetitions.
-        6. Ensure the summary is coherent and flows logically.
+        **Summary Format:**
+        🔹 **Overview:** Briefly describe the product, its purpose, and target users.  
+        🔹 **Key Features:** List core functionalities using bullet points with checkmarks (✅).  
+        🔹 **Core UI Components:** Highlight essential UI elements using pin icons (📌).  
+        🔹 **System Architecture:** Outline key technologies, databases, and frameworks used, formatted with bullets (🔹).  
+        🔹 **Future Enhancements:** Mention planned upgrades with rocket icons (🚀).  
 
-        **PRD Text to Summarize:**
+        **Guidelines:**
+        1. Focus on the main purpose and goals of the product.  
+        2. Highlight key features and functionalities concisely.  
+        3. Mention critical technical or business requirements.  
+        4. Include constraints, assumptions, or dependencies if relevant.  
+        5. Avoid unnecessary details, examples, or repetitions.  
+        6. Ensure logical flow and structured formatting.  
+
+        **PRD Text to Summarize:**  
         {self.prd_text}
         """
 
