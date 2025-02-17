@@ -110,11 +110,10 @@ class PRDSummarizer:
             match = re.search(r"```mermaid\n(.*?)\n```", mermaid_code, re.DOTALL)
             if match:
                 mermaid_graph = match.group(1)
-                print(mermaid_graph)
             else:
-                print("No Mermaid graph found.")
-
-            print("\n\nMermaid graph:", mermaid_graph)
+                # If the mermaid code is not wrapped in markdown format, assume the entire text is the graph
+                mermaid_graph = mermaid_code.strip()
+                print("\n\nMermaid graph:", mermaid_graph)
         else:
             raise Exception("Failed to get mermaid code.")
 
