@@ -34,7 +34,7 @@ function FileUpload() {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
   const [showZoomControls, setZoomControls] = useState(true);
-  const [showZoomIcons, setZoomIcons] = useState(false);
+  const [showZoomIcons, setZoomIcons] = useState(true);
 
   useEffect(() => {
     setIsSummaryView(selectedKey === "summarizedText");
@@ -173,7 +173,8 @@ function FileUpload() {
     setSelectedKey(newKey);
     setZoomControls(true);
     setZoomIcons(false)
-    if (newKey === "mermaid") {
+    console.log(newKey)
+    if (newKey === "Flowchart") {
       setZoomIcons(true)
     } else {
       setZoomIcons(false)

@@ -139,7 +139,7 @@ def defaultResponse(text):
     resJson = jsonify(
         {
             "summarizedText": summarized_text,
-            "mermaid": mermaid_code,
+            "Flowchart": mermaid_code,
             "userFlow": user_flows,
             "wireframes": wireframes,
         }
