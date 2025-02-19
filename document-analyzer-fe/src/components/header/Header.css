@@ -1,0 +1,33 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 96px;
+    background-color: white;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 8px;
+  }
+  
+  .logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    align-self: center;
+}
+
+.divider {
+    border: null;
+    height: 1px;
+    background-color: #6B7280; /* Adjust the color as needed */
+    margin-top: 8px; /* Optional spacing */
+    width: 100%;
+    color: #6B7280;
+}
