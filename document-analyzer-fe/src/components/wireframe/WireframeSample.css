@@ -1,0 +1,29 @@
+/* Wireframe Container */
+.wireframe-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+/* Title */
+.wireframe-title {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Grid Layout */
+.wireframe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* No Data Message */
+.no-data {
+  color: #777;
+  font-size: 16px;
+  text-align: center;
+}
