@@ -1,0 +1,81 @@
+.mermaid-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 10px;
+}
+
+.dropdown-menu {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-menu:hover {
+  border-color: #007bff;
+}
+
+.zoom-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.zoom-controls button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #007bff;
+  transition: transform 0.2s ease-in-out;
+}
+
+.zoom-controls button:hover {
+  transform: scale(1.1);
+}
+
+.mermaid-container {
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  position: relative;
+  background-color: white;
+  cursor: grab;
+}
+
+.mermaid-container:active {
+  cursor: grabbing;
+}
+
+.loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.loader-gif {
+  width: 50px;
+  height: 50px;
+}
+
+.loading-heading {
+  font-size: 20px;
+  color: #555;
+  margin: 20px 0;
+}

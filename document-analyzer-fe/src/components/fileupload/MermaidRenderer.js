@@ -13,7 +13,7 @@ const MermaidRenderer = ({ chartDefinition }) => {
 
   return (
     <div>
-      <h3>Generated Flowchart (Mermaid.js)</h3>
+      {/* <h3>Generated Flowchart (Mermaid.js)</h3> */}
       <pre ref={mermaidRef} className="mermaid">
         {chartDefinition}
       </pre>

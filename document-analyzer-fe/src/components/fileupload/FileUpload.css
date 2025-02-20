@@ -1,103 +1,364 @@
+/* Main Container */
 .container {
-    display: flex;
-    justify-content: space-between;
-    margin-left: 80px;
-    margin-right: 80px;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 1200px;
+  gap: 20px;
+}
 
+/* File Upload Section */
 .file-upload {
-    width: 30vw; /* 30% of screen width */
-    height: 300px; /* Fixed height */
-    border-radius: 12px; /* Rounded corners */
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 12px;
-    border: 2px solid #E5E7EB; /* Border color and thickness */
-  }
+  flex: 1;
+  min-width: 300px; /* Ensures it doesn’t get too small */
+  max-width: 400px; /* Keeps upload area readable */
+  border-radius: 12px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
 
-  .upload-icon-container {
-    width: calc(100% - 16px);
-    height: calc(100% - 16px); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    border: 2px dashed #2563EB; /* Adjust border styling if needed */
-    box-sizing: border-box; /* Ensures padding and border are included in dimensions */
-    background-color: #F3F4F6;
+/* Hover Effect for Upload */
+.file-upload:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Upload Icon Container */
+.upload-icon-container {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px dashed #2563eb;
+  box-sizing: border-box;
+  background-color: #f3f4f6;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Change Background on Hover */
+.upload-icon-container:hover {
+  background-color: #e6efff;
 }
 
 .upload-text {
-    font-size: 18px;
-    font-weight: bold;
-    color: #000000; /* Text color for visibility */
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
 }
 
 .upload-text-message {
-    font-size: 14px;
-    color: #6B7280; /* Text color for visibility */
+  font-size: 14px;
+  color: #6b7280;
 }
 
+/* Upload Controls Container */
+.upload-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* Upload Button (Choose File) */
 .upload-button {
-    margin-top: 10px;
-    padding: 12px;
-    background-color: #2563EB; /* Button color */
-    color: white;
-    font-size: larger;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #2563eb, #0056b3);
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .upload-button:hover {
-    background-color: #0056b3; /* Button hover effect */
+  background: linear-gradient(135deg, #0056b3, #2563eb);
+  transform: scale(1.05);
 }
 
+/* Generate Button */
+.generate-button {
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #10b981, #047857); /* Green theme */
+  color: white;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.generate-button:hover {
+  background: linear-gradient(135deg, #047857, #10b981);
+  transform: scale(1.05);
+}
+
+.generate-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading Message */
+.loading-message {
+  font-size: 14px;
+  color: #ff6600;
+  font-weight: bold;
+}
+
+/* Uploaded File Name */
+.file-name {
+  font-size: 14px;
+  color: #333;
+  margin-top: 8px;
+}
+
+.toolbar-element-container {
+  width: 100%;
+}
+
+/* Mind Map Section */
 .mermaid-chart {
-    width: 68vw; /* 70% of screen width, leaving space for file-upload */
-    height: 700px; /* Fixed height */
-    border-radius: 12px; /* Rounded corners */
-    background-color: #F9FAFB;
-    display: flex;
+  flex: 2;
+  width: 500px; /* Ensures proper width */
+  height: 100%;
+  border-radius: 12px;
+  background-color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+  padding: 20px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Hover Effect for MindMap */
+.mermaid-chart:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* MindMap Heading */
+.mind-map-heading {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Mind Map Container */
+.mind-map-container {
+  min-height: 500px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease-in-out;
+  overflow: scroll;
+  overflow-x: auto;
+}
+
+.disable-flex {
+  display: block; /* or display: unset; if you want to remove flex behavior */
+}
+
+/* Background Effect for Empty MindMap */
+.mind-map-container img {
+  width: 50%;
+  opacity: 0.7;
+  transition: transform 0.3s ease-in-out;
+}
+
+.mind-map-container img:hover {
+  transform: scale(1.1);
+}
+
+.custom-dropdown {
+  width: 200px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.custom-dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1.154;
+  display: grid;
+  color: #000;
+  background: linear-gradient(
+        to bottom left,
+        #0000 calc(50% - 1px),
+        currentColor 0 calc(50% + 1px),
+        #0000 0
+      )
+      right/50% 100%,
+    linear-gradient(
+        to bottom right,
+        #0000 calc(50% - 1px),
+        currentColor 0 calc(50% + 1px),
+        #0000 0
+      )
+      left / 50% 100%,
+    linear-gradient(currentColor 0 0) bottom/100% 2px;
+  background-repeat: no-repeat;
+  transform-origin: 50% 66%;
+  animation: l5 4s infinite linear;
+}
+
+.loader::before,
+.loader::after {
+  content: "";
+  grid-area: 1/1;
+  background: inherit;
+  transform-origin: inherit;
+  animation: inherit;
+}
+
+.loader::after {
+  animation-duration: 2s;
+}
+
+@keyframes l5 {
+  100% {
+    transform: rotate(1turn);
+  }
+}
+
+.summary-view {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 80%;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.summary-view .section-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.summary-view ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.summary-view li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.zoom-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.zoom-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  font-size: 16px;
+  margin: 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.zoom-btn:hover {
+  background: #0056b3;
+}
+.wireframe-container {
+  padding: 12px;
+  overflow-x: auto;
+  display: flex;
+  gap: 16px;
+}
+
+/* 🔹 RESPONSIVE DESIGN */
+@media (max-width: 1024px) {
+  .container {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    border: 2px solid #E5E7EB; /* Border color and thickness */
-    padding-left: 26px;
-    padding-right: 26px;
-    padding-bottom: 26px;
-    margin-left: 20px;
+  }
+
+  .file-upload {
+    width: 100%;
+    max-width: 90%;
+  }
+
+  .mermaid-chart {
+    width: 90%;
+    max-width: 90%;
+    min-width: auto;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-icon-container {
+    height: auto;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .file-upload {
+    min-height: 250px;
+  }
+
+  .upload-text {
+    font-size: 14px;
   }
 
   .mind-map-heading {
-    font-size: 24px; /* Adjust the font size as needed */
-    font-weight: bold; /* Make the text bold */
-    color: #333; /* Adjust the text color */
-    margin-bottom: 20px; /* Add some space below the heading */
-    margin-top: 20px; /* Add some space above the heading */
-    align-self: flex-start;
-    margin-left: 20px;
+    font-size: 18px;
   }
+}
 
-  .mind-map-container {
-    width: calc(100% - 16px);
-    height: calc(100% - 16px); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    border: 1px solid #E5E7EB; /* Adjust border styling if needed */
-    box-sizing: border-box; /* Ensures padding and border are included in dimensions */
-    background-color: #ffffff; 
-  }
+.mermaid-wrapper {
+  overflow: auto; /* Enable scrollbars when content overflows */
+  max-width: 100%; /* Adjust based on parent container */
+  max-height: 100vh; /* Ensure it doesn't take over the full screen */
+  white-space: nowrap; /* Prevent line breaks in large charts */
+  cursor: grab; /* Change cursor to a "grab" hand */
+  transform-origin: top center; /* Zoom from the top-left corner */
+  scroll-behavior: smooth;
+}

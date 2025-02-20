@@ -21,7 +21,7 @@ main {
 .divider {
   border: null;
   height: 1px;
-  background-color: #E5E7EB; /* Adjust the color as needed */
+  background-color: #e5e7eb; /* Adjust the color as needed */
   width: 100%;
   opacity: 0.5;
 }
