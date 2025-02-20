@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from routes.prd_summarizer import PRDSummarizer
@@ -7,8 +8,7 @@ from routes.wireframe_generator import WireframeGenerator
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)  # Allow all origins for all routes
 
-GEMINI_API_KEY = "AIzaSyAw2tIglLBt0EQ0tLKsmKg1Z4xk6bwGaf4"
-
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 @app.route("/analyze", methods=["POST"])
 def analyze_text():
